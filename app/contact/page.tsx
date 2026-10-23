@@ -1,0 +1,79 @@
+import type { Metadata } from "next";
+import { Arrow, Eyebrow, PageIntro } from "@/components/ui";
+import { profile } from "@/lib/content";
+export const metadata: Metadata = {
+  description:
+    "Connect with Lingesh Sashi Kumar for internships, freelance websites, and collaboration.",
+  title: "Contact",
+  ...(process.env.SITE_URL ? { alternates: { canonical: "/contact" } } : {}),
+};
+export default function Contact() {
+  return (
+    <>
+      <PageIntro number="05" title="Let’s connect">
+        <p>
+          A good conversation can lead to something great.
+          <br />
+          I’d love to hear what you’re working on.
+        </p>
+      </PageIntro>
+      <section className="section contact-grid">
+        <div>
+          <Eyebrow>OPEN TO POSSIBILITIES</Eyebrow>
+          <h2>
+            Have an idea?
+            <br />
+            <span className="muted">Let’s explore it.</span>
+          </h2>
+          <p className="contact-copy">
+            I’m interested in software engineering internships, freelance
+            website work, and thoughtful collaborations across AI, cloud, and
+            cybersecurity.
+          </p>
+          <p className="contact-copy">
+            Connect with me on LinkedIn to start a conversation, or explore my
+            public work on GitHub.
+          </p>
+          <a
+            className="button primary"
+            href={profile.linkedin!}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Connect on LinkedIn <Arrow />
+          </a>
+        </div>
+        <div className="contact-links">
+          <a href={profile.linkedin!} target="_blank" rel="noopener noreferrer">
+            <div>
+              <span className="small-label">START A CONVERSATION</span>
+              <h3>LinkedIn</h3>
+              <p>Lingesh Sashi Kumar</p>
+            </div>
+            <Arrow />
+          </a>
+          <a href={profile.github} target="_blank" rel="noopener noreferrer">
+            <div>
+              <span className="small-label">CODE & PROJECTS</span>
+              <h3>GitHub</h3>
+              <p>@lingeshssss</p>
+            </div>
+            <Arrow />
+          </a>
+          <a href={profile.youtube} target="_blank" rel="noopener noreferrer">
+            <div>
+              <span className="small-label">OFF THE SCREEN</span>
+              <h3>YouTube</h3>
+              <p>@2fast-m3 · Cars & technology</p>
+            </div>
+            <Arrow />
+          </a>
+          <div className="contact-location">
+            <span className="status-dot" /> Studying at Rutgers University–New
+            Brunswick
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
