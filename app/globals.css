@@ -21,6 +21,8 @@
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 :root[data-theme="dark"] {
+  --record-a: #2c332e;
+  --record-b: #3a423c;
   --bg: #141816;
   --surface: #1d2420;
   --text: #eef0e8;
@@ -244,8 +246,7 @@ footer {
 .tool-strip > span,
 .album-number,
 .album-meta,
-.sleeve-year,
-.sleeve-credit,
+.cover-meta,
 .sequencer-row > span,
 .sequencer figcaption,
 .type-portrait > span,
@@ -2038,24 +2039,31 @@ html:not(.js) .theme-toggle {
   fill: var(--accent);
 }
 .album-index,
-.album-sleeves {
+.album-covers {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 .album-index li {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) auto;
-  align-items: baseline;
-  gap: 16px;
-  padding: 22px 0;
+  grid-template-columns: 36px 76px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 0;
   border-bottom: 1px solid var(--line);
+}
+.album-thumb {
+  display: block;
+  width: 76px;
+  height: 76px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px var(--line);
 }
 .album-index li:first-child {
   border-top: 1px solid var(--line);
 }
 .album-index cite,
-.album-sleeves cite {
+.album-covers cite {
   font-style: normal;
   color: var(--text);
   overflow-wrap: anywhere;
@@ -2092,84 +2100,83 @@ html:not(.js) .theme-toggle {
 .also-enjoy strong {
   font-weight: 600;
 }
-.album-sleeves {
+.album-covers {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 40px 36px;
+  padding-right: 18px;
 }
-.sleeve {
+.cover-art {
   position: relative;
-  container-type: inline-size;
-  aspect-ratio: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  padding: 18px;
-  background: var(--surface);
-  border: 1px solid var(--line);
+}
+.cover-art img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
   border-radius: 3px;
-  color: var(--muted);
-  transition-delay: inherit;
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 16px 30px -22px rgb(0 0 0 / 0.55);
 }
-/* A record's grooves, drawn in CSS and peeking out of the sleeve corner. */
-.sleeve:before {
-  content: "";
+/* A record drawn in CSS: accent label, sheen, and grooves. */
+.cover-record {
   position: absolute;
-  width: 110%;
+  top: 3%;
+  right: 3%;
+  width: 94%;
   aspect-ratio: 1;
-  right: -58%;
-  bottom: -58%;
   border-radius: 50%;
-  background: repeating-radial-gradient(
-    circle,
-    transparent 0 5px,
-    var(--line) 5px 6px
-  );
-  transition-delay: inherit;
+  background:
+    radial-gradient(
+      circle,
+      var(--bg) 0 2.5%,
+      var(--accent) 2.5% 16%,
+      #0b0d0c 16% 17.5%,
+      transparent 17.5%
+    ),
+    conic-gradient(
+      from 20deg,
+      transparent 0 18%,
+      rgb(255 255 255 / 0.14) 24%,
+      transparent 30% 68%,
+      rgb(255 255 255 / 0.1) 74%,
+      transparent 80%
+    ),
+    repeating-radial-gradient(
+      circle,
+      var(--record-a, #141715) 0 2px,
+      var(--record-b, #222724) 2px 3px
+    );
+  box-shadow: 0 0 0 1px var(--line);
+  transform: translateX(12%);
 }
-.sleeve:after {
-  content: "";
-  position: absolute;
-  width: 18%;
-  aspect-ratio: 1;
-  right: -9%;
-  bottom: -9%;
-  border-radius: 50%;
-  background: var(--accent);
-  transition-delay: inherit;
+.album-covers figure {
+  margin: 0;
 }
-.album-sleeves > li:first-child .sleeve {
-  background: var(--text);
-  border-color: var(--text);
-  color: var(--bg);
+.album-covers figcaption {
+  display: grid;
+  gap: 6px;
+  margin-top: 18px;
 }
-.album-sleeves > li:first-child cite {
-  color: var(--bg);
+.album-covers cite {
+  font-size: 19px;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
 }
-.album-sleeves > li:first-child .sleeve:before {
-  opacity: 0.25;
-}
-.album-sleeves > li:nth-child(2) .sleeve {
-  background: var(--accent-soft);
-}
-.sleeve-year {
-  position: relative;
-}
-.album-sleeves cite {
-  position: relative;
-  margin-top: auto;
-  max-width: 85%;
-  font-size: clamp(17px, 12cqi, 40px);
-  letter-spacing: -0.05em;
-  line-height: 1;
-}
-.sleeve-short {
-  font-size: 0.55em;
+.cover-short {
+  font-size: 12px;
   letter-spacing: 0;
+  color: var(--muted);
 }
-.sleeve-credit {
-  position: relative;
-  margin-top: 10px;
+.cover-meta {
+  color: var(--muted);
+}
+.artwork-credit {
+  font-size: 12px;
+  line-height: 1.7;
+  max-width: 560px;
 }
 .production {
   display: grid;
@@ -2311,14 +2318,30 @@ html:not(.js) .theme-toggle {
   .motion-ready .music-feature:not([data-revealed]) .waveform rect {
     transform: scaleY(0.12);
   }
-  /* Records slide out of their sleeves. */
-  .sleeve:before,
-  .sleeve:after {
-    transition: transform var(--motion-draw) var(--ease-out);
+  /* Cover thumbnails settle into place with their row. */
+  .album-thumb {
+    transition: transform var(--motion-slow) var(--ease-out);
+    transition-delay: inherit;
   }
-  .motion-ready .album-sleeves:not([data-revealed]) .sleeve:before,
-  .motion-ready .album-sleeves:not([data-revealed]) .sleeve:after {
-    transform: translate(45%, 45%);
+  .motion-ready .album-index:not([data-revealed]) .album-thumb {
+    transform: scale(0.82);
+  }
+  /* Records spin out from behind each cover once it lands. */
+  .cover-record {
+    transition: transform var(--motion-draw) var(--ease-out);
+    transition-delay: calc(
+      var(--i, 0) * var(--motion-stagger) + var(--motion-base)
+    );
+  }
+  .motion-ready .album-covers:not([data-revealed]) .cover-record {
+    transform: translateX(0) rotate(-120deg);
+  }
+  @media (hover: hover) {
+    .album-covers figure:hover .cover-record {
+      transform: translateX(20%) rotate(40deg);
+      transition-duration: var(--motion-slow);
+      transition-delay: 0s;
+    }
   }
   /* A single pass of the playhead lights each active step as it crosses. */
   .sequencer-row i.on {
@@ -2344,8 +2367,8 @@ html:not(.js) .theme-toggle {
   .music-drake {
     grid-template-columns: 1fr;
   }
-  .album-sleeves {
-    gap: 12px;
+  .album-covers {
+    gap: 36px 32px;
   }
 }
 @media (max-width: 700px) {
@@ -2362,24 +2385,37 @@ html:not(.js) .theme-toggle {
     gap: 28px;
   }
   .album-index li {
-    grid-template-columns: 30px minmax(0, 1fr);
-    gap: 4px 12px;
-    padding: 18px 0;
+    grid-template-columns: 22px 56px minmax(0, 1fr);
+    gap: 4px 14px;
+    padding: 14px 0;
+  }
+  .album-number,
+  .album-thumb {
+    grid-row: span 2;
+  }
+  .album-thumb {
+    width: 56px;
+    height: 56px;
+  }
+  .album-index cite {
+    align-self: end;
   }
   .album-meta {
-    grid-column: 2;
+    grid-column: 3;
+    align-self: start;
     text-align: left;
   }
   .also-enjoy {
     flex-direction: column;
     gap: 12px;
   }
-  .album-sleeves {
+  .album-covers {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: 28px 24px;
+    padding-right: 12px;
   }
-  .sleeve {
-    padding: 12px;
+  .album-covers cite {
+    font-size: 16px;
   }
   .sequencer {
     --seq-label: 34px;

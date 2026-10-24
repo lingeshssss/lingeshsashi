@@ -235,7 +235,7 @@ test("About page music, production, and interests content", async ({
   await expect(
     drake.getByRole("heading", { name: "Drake", exact: true }),
   ).toBeVisible();
-  await expect(drake.locator(".album-sleeves li")).toHaveCount(6);
+  await expect(drake.locator(".album-covers li")).toHaveCount(6);
   await expect(
     drake.locator("li").filter({ hasText: "Her Loss" }),
   ).toContainText("Drake & 21 Savage");
@@ -270,10 +270,23 @@ test("About page music, production, and interests content", async ({
     "href",
     "https://www.youtube.com/@2fast-m3",
   );
-  // Decorative only: no media, players, artwork, or controls in music sections.
+  // Cover art: every album has a loaded image with alt text; no players.
   await expect(
-    page.locator(".music, .production").locator("audio, video, iframe, img"),
+    page.locator(".music, .production").locator("audio, video, iframe"),
   ).toHaveCount(0);
+  const covers = page.locator(".music img");
+  await expect(covers).toHaveCount(11);
+  await page.locator(".artwork-credit").scrollIntoViewIfNeeded();
+  for (const img of await covers.all()) {
+    await img.scrollIntoViewIfNeeded();
+    await expect(img).toHaveAttribute("alt", /cover/);
+    await expect
+      .poll(() => img.evaluate((el: HTMLImageElement) => el.naturalWidth))
+      .toBeGreaterThan(0);
+  }
+  await expect(page.locator(".artwork-credit")).toContainText(
+    "respective artists and labels",
+  );
   await expect(
     page.locator(".music, .production").locator("button, a"),
   ).toHaveCount(0);
@@ -334,10 +347,10 @@ test("scroll reveals show content on scroll and on keyboard focus", async ({
     .evaluate((el: HTMLElement) => el.focus({ preventScroll: true }));
   await expect(connect).not.toHaveAttribute("data-revealed");
   await expect(connect).toHaveCSS("opacity", "1");
-  const sleeves = page.locator(".album-sleeves");
-  await sleeves.scrollIntoViewIfNeeded();
-  await expect(sleeves).toHaveAttribute("data-revealed", "");
-  await expect(sleeves.locator("li").last()).toHaveCSS("opacity", "1");
+  const covers = page.locator(".album-covers");
+  await covers.scrollIntoViewIfNeeded();
+  await expect(covers).toHaveAttribute("data-revealed", "");
+  await expect(covers.locator("li").last()).toHaveCSS("opacity", "1");
   const height = await page.evaluate(() => document.body.scrollHeight);
   for (let y = 0; y < height; y += 500) {
     await page.evaluate((y) => scrollTo(0, y), y);
@@ -369,7 +382,7 @@ test("content and navigation remain available without JavaScript", async ({
   await page.goto("/about");
   await page.waitForTimeout(1000);
   expect(await hiddenRevealCount(page)).toBe(0);
-  await expect(page.locator(".album-sleeves li").last()).toBeVisible();
+  await expect(page.locator(".album-covers li").last()).toBeVisible();
   await expect(page.getByRole("button", { name: "Menu" })).toBeHidden();
   const nav = page.getByRole("navigation", { name: "Main navigation" });
   await expect(
