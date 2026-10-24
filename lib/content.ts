@@ -242,6 +242,74 @@ export const biography = [
   "I also build client websites, have administered digital operations at Prince Martial Arts, and designed and taught an introductory AI/ML curriculum for middle and high school students through a community temple program. Sharing what I’m learning is part of how I keep learning myself.",
   "Outside of software, I founded an automotive engineering club and served as its president, participated in FIRST Robotics Team 303 and debate, and practice karate as a brown belt. I served as an assistant instructor at Prince Martial Arts from September 2024 to September 2026.",
 ];
+// Personal interests, as stated by the owner. Album titles use official styling;
+// credits and release years were checked against public discography records
+// (ICEMAN: Drake solo album, released May 15, 2026). No artwork, streaming links,
+// listening data, released tracks, equipment, or industry affiliations are claimed.
+export type Album = {
+  title: string;
+  short?: string;
+  credit: string;
+  year: string;
+};
+export const music = {
+  intro:
+    "Music is one of my biggest interests outside of school and software. These are the artists I keep coming back to, and the projects I’d point anyone toward first.",
+  favorite: {
+    artist: "Future",
+    note: "Future is my favorite artist. Narrowing his catalog down to five wasn’t easy, but these are the ones.",
+    albums: [
+      {
+        title: "WE DON’T TRUST YOU",
+        credit: "Future & Metro Boomin",
+        year: "2024",
+      },
+      { title: "MIXTAPE PLUTO", credit: "Future", year: "2024" },
+      { title: "High Off Life", credit: "Future", year: "2020" },
+      { title: "The WIZRD", credit: "Future", year: "2019" },
+      { title: "DS2", credit: "Future", year: "2015" },
+    ] as Album[],
+  },
+  alsoEnjoy: ["NAV", "Metro Boomin", "Drake"],
+  drake: {
+    artist: "Drake",
+    note: "Drake has one of the deepest catalogs out there. These are my favorite projects of his.",
+    albums: [
+      { title: "Her Loss", credit: "Drake & 21 Savage", year: "2022" },
+      { title: "ICEMAN", credit: "Drake", year: "2026" },
+      { title: "Views", credit: "Drake", year: "2016" },
+      { title: "Scorpion", credit: "Drake", year: "2018" },
+      { title: "For All the Dogs", credit: "Drake", year: "2023" },
+      {
+        title: "Certified Lover Boy",
+        short: "CLB",
+        credit: "Drake",
+        year: "2021",
+      },
+    ] as Album[],
+  },
+  production: {
+    inspirations: ["Southside", "ATL Jacob"],
+    paragraphs: [
+      "One of my hobbies is music production. I make beats inspired by producers like Southside and ATL Jacob, built around the hard-hitting drums and 808s I hear in their work.",
+      "Making a beat feels a lot like building software. I start with a small idea, layer parts on top of it, listen back, and keep adjusting until it works. It’s also where I experiment most freely: trying a different bounce, swapping a sound, or stripping a pattern back to see what still holds up.",
+    ],
+  },
+};
+export const interests = [
+  {
+    label: "CARS",
+    title: "Engineering in motion.",
+    body: "Cars bring together design, technology, and personality. I founded and led an automotive engineering and design club, and I share the interest on my automotive YouTube channel.",
+    link: { href: profile.youtube, label: "@2fast-m3" },
+  },
+  {
+    label: "ENTREPRENEURSHIP",
+    title: "Ideas into action.",
+    body: "Through my web-design business, I build websites for clients. I enjoy the whole process: understanding what someone needs, making something useful, and finding the people it can help.",
+    link: null as { href: string; label: string } | null,
+  },
+];
 // Editorial checklist: do not present these missing details as public claims.
 export const missingContent = {
   credentials:

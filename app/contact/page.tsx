@@ -43,7 +43,7 @@ export default function Contact() {
             Connect on LinkedIn <Arrow />
           </a>
         </div>
-        <div className="contact-links">
+        <div className="contact-links" data-reveal-stagger>
           <a href={`mailto:${profile.email}`}>
             <div>
               <span className="small-label">SAY HELLO</span>

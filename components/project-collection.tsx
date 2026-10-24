@@ -34,7 +34,7 @@ export function ProjectCollection() {
       <p className="sr-only" aria-live="polite">
         {shown.length} {shown.length === 1 ? "project" : "projects"} shown
       </p>
-      <div className="project-collection">
+      <div className="project-collection" data-reveal-stagger>
         {shown.map((project) => (
           <ProjectCard key={project.slug} project={project} />
         ))}

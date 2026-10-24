@@ -10,6 +10,15 @@
   --paper: #fdfcf8;
   --nav: rgba(247, 246, 242, 0.9);
   color-scheme: light;
+  /* Motion tokens: every duration, easing, and distance comes from here. */
+  --motion-fast: 160ms;
+  --motion-base: 280ms;
+  --motion-slow: 640ms;
+  --motion-draw: 1100ms;
+  --motion-stagger: 70ms;
+  --motion-distance: 18px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 :root[data-theme="dark"] {
   --bg: #141816;
@@ -140,7 +149,30 @@ p {
   padding: 31px 0;
   color: var(--muted);
 }
+.nav a {
+  transition: color var(--motion-fast) var(--ease-out);
+}
+.nav a:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 24px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--motion-base) var(--ease-out);
+}
+.nav a:hover:before,
+.nav a:focus-visible:before {
+  transform: scaleX(1);
+}
+.nav a[aria-current="page"]:before {
+  display: none;
+}
 .nav a:hover,
+.nav a:focus-visible,
 .nav a[aria-current="page"] {
   color: var(--text);
 }
@@ -163,6 +195,18 @@ p {
   border: 1px solid var(--line);
   border-radius: 50%;
   font-size: 22px;
+  transition: border-color var(--motion-fast) var(--ease-out);
+}
+.theme-toggle > span {
+  transition: transform var(--motion-base) var(--ease-out);
+}
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  border-color: var(--text);
+}
+.theme-toggle:hover > span,
+.theme-toggle:focus-visible > span {
+  transform: rotate(30deg);
 }
 .menu-toggle {
   display: none;
@@ -198,7 +242,12 @@ footer {
 .drawing-bottom,
 .identity-strip,
 .tool-strip > span,
-.interest-grid > div > span,
+.album-number,
+.album-meta,
+.sleeve-year,
+.sleeve-credit,
+.sequencer-row > span,
+.sequencer figcaption,
 .type-portrait > span,
 .timeline-number,
 .footer-bottom {
@@ -262,11 +311,20 @@ footer {
   font-weight: 600;
   border: 1px solid transparent;
   transition:
-    transform 0.2s,
-    background 0.2s;
+    transform var(--motion-fast) var(--ease-out),
+    background-color var(--motion-fast) var(--ease-out),
+    border-color var(--motion-fast) var(--ease-out);
 }
-.button:hover {
+.button:hover,
+.button:focus-visible {
   transform: translateY(-2px);
+}
+.button:active {
+  transform: translateY(0) scale(0.98);
+}
+.button.secondary:hover,
+.button.secondary:focus-visible {
+  border-color: var(--text);
 }
 .button.primary {
   background: var(--accent);
@@ -373,6 +431,11 @@ footer {
   padding-top: 22px;
   margin-left: 6px;
 }
+.dial-track {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
 .dial-point {
   position: absolute;
   right: 40px;
@@ -444,9 +507,28 @@ footer {
   border-bottom: 1px solid var(--line);
   color: var(--text);
 }
-.text-link:hover {
+.text-link {
+  transition:
+    color var(--motion-fast) var(--ease-out),
+    border-color var(--motion-fast) var(--ease-out);
+}
+.text-link:hover,
+.text-link:focus-visible {
   color: var(--accent);
   border-color: var(--accent);
+}
+.arrow-icon {
+  transition: transform var(--motion-fast) var(--ease-out);
+}
+.button:hover .arrow-icon,
+.button:focus-visible .arrow-icon,
+.text-link:hover .arrow-icon,
+.text-link:focus-visible .arrow-icon,
+.contact-links > a:hover .arrow-icon,
+.contact-links > a:focus-visible .arrow-icon,
+.footer-top a:hover .arrow-icon,
+.footer-top a:focus-visible .arrow-icon {
+  transform: translate(2px, -2px);
 }
 .featured-grid {
   display: grid;
@@ -554,12 +636,33 @@ footer {
   border: 1px solid var(--line);
   margin-top: 12px;
   transition:
-    background 0.2s,
-    color 0.2s;
+    background-color var(--motion-fast) var(--ease-out),
+    color var(--motion-fast) var(--ease-out),
+    transform var(--motion-base) var(--ease-out);
 }
-.project-card:hover .circle-arrow {
+.project-card:hover .circle-arrow,
+.project-card:focus-visible .circle-arrow {
   background: var(--accent);
   color: var(--bg);
+  transform: rotate(45deg);
+}
+.project-card:hover .circle-arrow .arrow-icon,
+.project-card:focus-visible .circle-arrow .arrow-icon {
+  transform: rotate(-45deg);
+}
+.project-card .campus-mark {
+  transition: transform var(--motion-slow) var(--ease-out);
+}
+.project-card:hover .campus-mark,
+.project-card:focus-visible .campus-mark {
+  transform: translate(-50%, -50%) scale(1.04);
+}
+.project-card h3 {
+  transition: color var(--motion-fast) var(--ease-out);
+}
+.project-card:hover h3,
+.project-card:focus-visible h3 {
+  color: var(--accent);
 }
 .project-aside {
   align-self: center;
@@ -661,7 +764,11 @@ footer {
   gap: 26px;
   font-size: 12px;
 }
-.footer-top a:hover {
+.footer-top a {
+  transition: color var(--motion-fast) var(--ease-out);
+}
+.footer-top a:hover,
+.footer-top a:focus-visible {
   color: var(--accent);
 }
 .footer-bottom {
@@ -738,33 +845,6 @@ footer {
 .prose li {
   padding: 5px 0;
 }
-.interests h2 {
-  margin-top: 22px;
-}
-.interest-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  margin-top: 45px;
-}
-.interest-grid > div {
-  border-top: 1px solid var(--line);
-  padding-top: 22px;
-}
-.interest-grid > div > span {
-  font-size: 9px;
-  color: var(--muted);
-}
-.interest-grid h3 {
-  font-size: 23px;
-  margin: 23px 0 15px;
-}
-.interest-grid p {
-  font-size: 14px;
-}
-.interest-grid .text-link {
-  margin-top: 16px;
-}
 .filters {
   display: flex;
   gap: 10px;
@@ -777,6 +857,18 @@ footer {
   min-height: 44px;
   padding: 10px 18px;
   font-size: 12px;
+  transition:
+    background-color var(--motion-fast) var(--ease-out),
+    color var(--motion-fast) var(--ease-out),
+    border-color var(--motion-fast) var(--ease-out),
+    transform var(--motion-fast) var(--ease-out);
+}
+.filters button:hover,
+.filters button:focus-visible {
+  border-color: var(--text);
+}
+.filters button:active {
+  transform: scale(0.97);
 }
 .filters button[aria-pressed="true"] {
   background: var(--text);
@@ -945,8 +1037,15 @@ footer {
   font-size: 26px;
   color: var(--accent);
 }
-.contact-links a:hover h3 {
+.contact-links h3 {
+  transition:
+    color var(--motion-fast) var(--ease-out),
+    transform var(--motion-base) var(--ease-out);
+}
+.contact-links a:hover h3,
+.contact-links a:focus-visible h3 {
   color: var(--accent);
+  transform: translateX(6px);
 }
 .contact-location {
   font-size: 11px;
@@ -1057,7 +1156,6 @@ footer {
     width: 36px;
   }
   .nav {
-    display: none;
     position: absolute;
     top: 72px;
     left: 0;
@@ -1070,12 +1168,84 @@ footer {
     padding: 12px 24px 24px;
     margin: 0;
   }
-  .nav.open {
-    display: flex;
+  /* Collapsed only when JS can reopen it; visibility keeps it out of the
+     focus order and accessibility tree while closed. */
+  .js .nav {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition:
+      opacity var(--motion-fast) var(--ease-out),
+      transform var(--motion-fast) var(--ease-out),
+      visibility 0s linear var(--motion-fast);
+  }
+  .js .nav.open {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity var(--motion-base) var(--ease-out),
+      transform var(--motion-base) var(--ease-out),
+      visibility 0s;
+  }
+  .js .nav a {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      opacity var(--motion-fast) var(--ease-out),
+      transform var(--motion-fast) var(--ease-out),
+      color var(--motion-fast) var(--ease-out);
+  }
+  .js .nav.open a {
+    opacity: 1;
+    transform: none;
+    transition-duration: var(--motion-base);
+  }
+  .js .nav.open a:nth-child(2) {
+    transition-delay: calc(var(--motion-stagger) * 0.5);
+  }
+  .js .nav.open a:nth-child(3) {
+    transition-delay: calc(var(--motion-stagger) * 1);
+  }
+  .js .nav.open a:nth-child(4) {
+    transition-delay: calc(var(--motion-stagger) * 1.5);
+  }
+  .js .nav.open a:nth-child(5) {
+    transition-delay: calc(var(--motion-stagger) * 2);
+  }
+  .js .nav.open a:nth-child(6) {
+    transition-delay: calc(var(--motion-stagger) * 2.5);
+  }
+  /* Without JS the menu cannot toggle, so links stay listed in the header. */
+  html:not(.js) .nav-wrap {
+    flex-wrap: wrap;
+    padding-bottom: 8px;
+  }
+  html:not(.js) .menu-toggle {
+    display: none;
+  }
+  html:not(.js) .nav {
+    position: static;
+    order: 3;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0 18px;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+  html:not(.js) .nav a[aria-current="page"]:after {
+    left: 50%;
+    right: auto;
+    bottom: 4px;
   }
   .nav a {
     padding: 13px 0;
     font-size: 16px;
+  }
+  .nav a:before {
+    display: none;
   }
   .nav a[aria-current="page"]:after {
     left: auto;
@@ -1244,14 +1414,6 @@ footer {
   .prose p {
     font-size: 14px;
   }
-  .interest-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    margin-top: 30px;
-  }
-  .interest-grid h3 {
-    margin-top: 18px;
-  }
   .project-collection .project-visual {
     height: 300px;
   }
@@ -1343,20 +1505,179 @@ footer {
     font-size: 12px;
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .hero-copy,
-  .page-intro {
-    animation: enter 0.55s ease-out;
+html:not(.js) .theme-toggle {
+  display: none;
+}
+/* ---------- Motion system ----------
+   Entrances are CSS-only and play once on load. Scroll reveals hide content
+   only when `.motion-ready` is present (JS running) and the visitor has not
+   asked for reduced motion; MotionController marks them `data-revealed`. */
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--motion-distance), 0);
   }
-  @keyframes enter {
-    from {
-      opacity: 0;
-      transform: translateY(12px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes dial-turn {
+  from {
+    opacity: 0;
+    transform: rotate(-40deg);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes draw-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes draw-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes orbit-in {
+  from {
+    transform: rotate(-120deg);
+  }
+  to {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* Page introductions: eyebrow, heading, copy, in sequence. */
+  .page-intro > *,
+  .hero-copy > * {
+    animation: enter var(--motion-slow) var(--ease-out) backwards;
+  }
+  .page-intro > :nth-child(2),
+  .hero-copy > :nth-child(2) {
+    animation-delay: calc(var(--motion-stagger) * 1);
+  }
+  .page-intro > :nth-child(3),
+  .hero-copy > :nth-child(3) {
+    animation-delay: calc(var(--motion-stagger) * 2);
+  }
+  .page-intro > :nth-child(4),
+  .hero-copy > :nth-child(4) {
+    animation-delay: calc(var(--motion-stagger) * 3);
+  }
+  .hero-copy > :nth-child(5) {
+    animation-delay: calc(var(--motion-stagger) * 4);
+  }
+  .detail-heading > * {
+    animation: enter var(--motion-slow) var(--ease-out) backwards;
+  }
+  .detail-heading > :nth-child(2) {
+    animation-delay: calc(var(--motion-stagger) * 1);
+  }
+  .detail-heading > :nth-child(n + 3) {
+    animation-delay: calc(var(--motion-stagger) * 2);
+  }
+  .page-intro + .project-visual,
+  .identity-strip {
+    animation: fade-in var(--motion-slow) var(--ease-out) backwards;
+    animation-delay: calc(var(--motion-stagger) * 3);
+  }
+  /* Engineering visual: the drawing assembles once, then rests. */
+  .engineering {
+    animation: fade-in var(--motion-slow) var(--ease-out) backwards;
+  }
+  .drawing-grid {
+    animation: fade-in var(--motion-draw) var(--ease-out) backwards;
+  }
+  .dial-ring {
+    animation: dial-turn var(--motion-draw) var(--ease-out) backwards;
+    animation-delay: calc(var(--motion-stagger) * 2);
+    transition: transform var(--motion-draw) var(--ease-in-out);
+  }
+  .dial-cross.horizontal {
+    animation: draw-x var(--motion-draw) var(--ease-in-out) backwards;
+  }
+  .dial-cross.vertical {
+    animation: draw-y var(--motion-draw) var(--ease-in-out) backwards;
+  }
+  .dial-orbit,
+  .dial-inner {
+    animation: scale-in var(--motion-slow) var(--ease-out) backwards;
+    animation-delay: calc(var(--motion-stagger) * 3);
+  }
+  .dial-center {
+    animation: scale-in var(--motion-slow) var(--ease-out) backwards;
+    animation-delay: calc(var(--motion-stagger) * 4);
+  }
+  /* The point travels along the outer ring into its resting position. */
+  .dial-track {
+    animation: orbit-in var(--motion-draw) var(--ease-out) backwards;
+    animation-delay: calc(var(--motion-stagger) * 4);
+  }
+  .dial-center > span {
+    transition: transform var(--motion-base) var(--ease-out);
+  }
+  .engineering:hover .dial-ring {
+    transform: rotate(18deg);
+  }
+  .engineering:hover .dial-center > span {
+    transform: translate(3px, -3px);
+  }
+  .drawing-label,
+  .drawing-bottom {
+    animation: fade-in var(--motion-slow) var(--ease-out) backwards;
+    animation-delay: calc(var(--motion-stagger) * 6);
+  }
+
+  /* Scroll reveals */
+  [data-reveal],
+  [data-reveal-stagger] > * {
+    transition:
+      opacity var(--motion-slow) var(--ease-out),
+      transform var(--motion-slow) var(--ease-out);
+  }
+  .motion-ready [data-reveal]:not([data-revealed]):not(:focus-within),
+  .motion-ready
+    [data-reveal-stagger]:not([data-revealed]):not(:focus-within)
+    > * {
+    opacity: 0;
+    transform: translate3d(0, var(--motion-distance), 0);
+  }
+  [data-reveal-stagger] > :nth-child(2) {
+    transition-delay: calc(var(--motion-stagger) * 1);
+  }
+  [data-reveal-stagger] > :nth-child(3) {
+    transition-delay: calc(var(--motion-stagger) * 2);
+  }
+  [data-reveal-stagger] > :nth-child(4) {
+    transition-delay: calc(var(--motion-stagger) * 3);
+  }
+  [data-reveal-stagger] > :nth-child(5) {
+    transition-delay: calc(var(--motion-stagger) * 4);
+  }
+  [data-reveal-stagger] > :nth-child(6) {
+    transition-delay: calc(var(--motion-stagger) * 5);
+  }
+  [data-reveal-stagger] > :nth-child(n + 7) {
+    transition-delay: calc(var(--motion-stagger) * 6);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1396,6 +1717,17 @@ footer {
     padding: 0;
     border: 0;
     margin: 0;
+  }
+  *,
+  *:before,
+  *:after {
+    animation: none !important;
+    transition: none !important;
+  }
+  [data-reveal],
+  [data-reveal-stagger] > * {
+    opacity: 1 !important;
+    transform: none !important;
   }
   .resume-row {
     break-inside: avoid;
@@ -1649,5 +1981,422 @@ footer {
   }
   @page {
     margin: 12mm;
+  }
+}
+
+/* ---------- About: music, production, interests ---------- */
+.music {
+  display: grid;
+  gap: 64px;
+}
+.music-heading {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 26px 80px;
+  align-items: end;
+}
+.music-heading .eyebrow {
+  grid-column: 1 / -1;
+}
+.music-heading h2 {
+  font-size: clamp(46px, 6.2vw, 86px);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+.music-heading > p {
+  font-size: 15px;
+  line-height: 1.8;
+  max-width: 430px;
+}
+.music-feature,
+.music-drake {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 72px;
+  align-items: start;
+}
+.music-drake {
+  grid-template-columns: 0.7fr 1.3fr;
+}
+.artist-name {
+  font-size: clamp(64px, 10.5vw, 148px);
+  letter-spacing: -0.075em;
+  line-height: 0.88;
+  margin: 18px 0 26px;
+}
+.music-artist > p:last-child {
+  font-size: 14px;
+  line-height: 1.8;
+  max-width: 360px;
+}
+.waveform {
+  display: block;
+  width: 100%;
+  max-width: 380px;
+  height: 52px;
+  margin-bottom: 26px;
+  fill: var(--accent);
+}
+.album-index,
+.album-sleeves {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.album-index li {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 16px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+.album-index li:first-child {
+  border-top: 1px solid var(--line);
+}
+.album-index cite,
+.album-sleeves cite {
+  font-style: normal;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+.album-index cite {
+  font-size: clamp(26px, 3.1vw, 42px);
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+}
+.album-number {
+  color: var(--accent);
+}
+.album-meta {
+  color: var(--muted);
+  text-align: right;
+}
+.also-enjoy {
+  display: flex;
+  align-items: baseline;
+  gap: 40px;
+  padding: 30px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  font-size: clamp(22px, 2.6vw, 34px);
+  letter-spacing: -0.035em;
+  line-height: 1.25;
+}
+.also-enjoy .small-label {
+  flex-shrink: 0;
+  width: 180px;
+  letter-spacing: 0.1em;
+}
+.also-enjoy strong {
+  font-weight: 600;
+}
+.album-sleeves {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.sleeve {
+  position: relative;
+  container-type: inline-size;
+  aspect-ratio: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  color: var(--muted);
+  transition-delay: inherit;
+}
+/* A record's grooves, drawn in CSS and peeking out of the sleeve corner. */
+.sleeve:before {
+  content: "";
+  position: absolute;
+  width: 110%;
+  aspect-ratio: 1;
+  right: -58%;
+  bottom: -58%;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle,
+    transparent 0 5px,
+    var(--line) 5px 6px
+  );
+  transition-delay: inherit;
+}
+.sleeve:after {
+  content: "";
+  position: absolute;
+  width: 18%;
+  aspect-ratio: 1;
+  right: -9%;
+  bottom: -9%;
+  border-radius: 50%;
+  background: var(--accent);
+  transition-delay: inherit;
+}
+.album-sleeves > li:first-child .sleeve {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+.album-sleeves > li:first-child cite {
+  color: var(--bg);
+}
+.album-sleeves > li:first-child .sleeve:before {
+  opacity: 0.25;
+}
+.album-sleeves > li:nth-child(2) .sleeve {
+  background: var(--accent-soft);
+}
+.sleeve-year {
+  position: relative;
+}
+.album-sleeves cite {
+  position: relative;
+  margin-top: auto;
+  max-width: 85%;
+  font-size: clamp(17px, 12cqi, 40px);
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+.sleeve-short {
+  font-size: 0.55em;
+  letter-spacing: 0;
+}
+.sleeve-credit {
+  position: relative;
+  margin-top: 10px;
+}
+.production {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.production h2 {
+  margin: 22px 0 8px;
+}
+.production > div > p {
+  font-size: 15px;
+  line-height: 1.85;
+  margin-top: 18px;
+  max-width: 520px;
+}
+.production .inspirations {
+  display: grid;
+  gap: 8px;
+  margin-top: 34px;
+}
+.inspirations > span:last-child {
+  color: var(--text);
+  font-size: clamp(30px, 3.6vw, 46px);
+  letter-spacing: -0.05em;
+  line-height: 1.05;
+}
+.sequencer {
+  --seq-label: 46px;
+  --seq-gap: 12px;
+  margin: 0;
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+}
+.sequencer-grid {
+  position: relative;
+  display: grid;
+  gap: 10px;
+}
+.sequencer-row {
+  display: grid;
+  grid-template-columns: var(--seq-label) 1fr;
+  gap: var(--seq-gap);
+  align-items: center;
+}
+.sequencer-row > span {
+  font-size: 9px;
+  color: var(--muted);
+}
+.sequencer-row > div {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  gap: 4px;
+}
+.sequencer-row i {
+  display: block;
+  aspect-ratio: 1;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+.sequencer-row i:nth-child(4n + 1) {
+  background: var(--line);
+}
+.sequencer-row i.on {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.sequencer-playhead {
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  left: calc(var(--seq-label) + var(--seq-gap));
+  right: 0;
+  border-left: 2px solid var(--accent);
+  opacity: 0;
+  pointer-events: none;
+}
+.sequencer figcaption {
+  margin-top: 22px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.interests h2 {
+  margin-top: 22px;
+}
+.interest-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 48px;
+  margin-top: 45px;
+}
+.interest-list > div {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 28px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+.interest-index {
+  color: var(--accent);
+  font-size: clamp(54px, 6.4vw, 90px);
+  letter-spacing: -0.07em;
+  line-height: 0.8;
+}
+.interest-list h3 {
+  margin: 14px 0 12px;
+  font-size: 26px;
+}
+.interest-list p:not(.small-label) {
+  font-size: 14px;
+  max-width: 420px;
+}
+.interest-list .text-link {
+  margin-top: 16px;
+}
+@keyframes sweep {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  90% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* Waveform bars rise once, left to right, when the section is revealed. */
+  .waveform rect {
+    transform-box: fill-box;
+    transform-origin: bottom;
+    transition: transform var(--motion-slow) var(--ease-out);
+    transition-delay: calc(var(--i) * 12ms + var(--motion-base));
+  }
+  .motion-ready .music-feature:not([data-revealed]) .waveform rect {
+    transform: scaleY(0.12);
+  }
+  /* Records slide out of their sleeves. */
+  .sleeve:before,
+  .sleeve:after {
+    transition: transform var(--motion-draw) var(--ease-out);
+  }
+  .motion-ready .album-sleeves:not([data-revealed]) .sleeve:before,
+  .motion-ready .album-sleeves:not([data-revealed]) .sleeve:after {
+    transform: translate(45%, 45%);
+  }
+  /* A single pass of the playhead lights each active step as it crosses. */
+  .sequencer-row i.on {
+    transition:
+      opacity var(--motion-fast) var(--ease-out),
+      transform var(--motion-base) var(--ease-out);
+    transition-delay: calc(var(--i) * 100ms + var(--motion-slow));
+  }
+  .motion-ready [data-reveal]:not([data-revealed]) .sequencer-row i.on {
+    opacity: 0.25;
+    transform: scale(0.7);
+  }
+  .motion-ready [data-revealed] .sequencer-playhead {
+    animation: sweep 1600ms linear var(--motion-slow) backwards;
+  }
+}
+@media (max-width: 1000px) {
+  .music-feature,
+  .music-drake,
+  .production {
+    gap: 40px;
+  }
+  .music-drake {
+    grid-template-columns: 1fr;
+  }
+  .album-sleeves {
+    gap: 12px;
+  }
+}
+@media (max-width: 700px) {
+  .music {
+    gap: 44px;
+  }
+  .music-heading,
+  .music-feature,
+  .production,
+  .interest-list {
+    grid-template-columns: 1fr;
+  }
+  .music-feature {
+    gap: 28px;
+  }
+  .album-index li {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 4px 12px;
+    padding: 18px 0;
+  }
+  .album-meta {
+    grid-column: 2;
+    text-align: left;
+  }
+  .also-enjoy {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .album-sleeves {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .sleeve {
+    padding: 12px;
+  }
+  .sequencer {
+    --seq-label: 34px;
+    --seq-gap: 8px;
+    padding: 16px;
+  }
+  .sequencer-row > span {
+    font-size: 7px;
+  }
+  .sequencer-row > div {
+    gap: 2px;
+  }
+  .interest-list {
+    gap: 32px;
+    margin-top: 30px;
+  }
+  .interest-list > div {
+    gap: 18px;
   }
 }

@@ -18,14 +18,14 @@ export default function Experience() {
         </p>
       </PageIntro>
       <section className="section timeline-section">
-        <div>
+        <div data-reveal>
           <Eyebrow>EXPERIENCE & INVOLVEMENT</Eyebrow>
           <p className="muted">
             Professional roles, followed by community and leadership
             involvement.
           </p>
         </div>
-        <div className="timeline">
+        <div className="timeline" data-reveal-stagger>
           {experience.map((e, i) => (
             <article key={e.title}>
               <span className="timeline-number">0{i + 1}</span>
