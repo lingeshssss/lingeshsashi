@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import Image from "next/image";
 import type { Album } from "@/lib/content";
 // Decorative graphics only: no audio, no controls. Markup is deterministic so
 // server and client output always match.
@@ -72,6 +73,14 @@ export function AlbumIndex({ albums }: { albums: Album[] }) {
       {albums.map((album, i) => (
         <li key={album.title}>
           <span className="album-number">{String(i + 1).padStart(2, "0")}</span>
+          <Image
+            className="album-thumb"
+            src={album.cover}
+            alt={album.coverAlt}
+            width={160}
+            height={160}
+            sizes="(max-width: 700px) 56px, 76px"
+          />
           <cite>{album.title}</cite>
           <span className="album-meta">
             {album.credit} · {album.year}
@@ -81,21 +90,35 @@ export function AlbumIndex({ albums }: { albums: Album[] }) {
     </ol>
   );
 }
-export function AlbumSleeves({ albums }: { albums: Album[] }) {
+// Each cover sits in front of a CSS record that slides out once revealed.
+export function AlbumCovers({ albums }: { albums: Album[] }) {
   return (
-    <ol className="album-sleeves" data-reveal-stagger>
-      {albums.map((album) => (
-        <li key={album.title}>
-          <div className="sleeve">
-            <span className="sleeve-year">{album.year}</span>
-            <cite>
-              {album.title}
-              {album.short && (
-                <span className="sleeve-short"> ({album.short})</span>
-              )}
-            </cite>
-            <span className="sleeve-credit">{album.credit}</span>
-          </div>
+    <ol className="album-covers" data-reveal-stagger>
+      {albums.map((album, i) => (
+        <li key={album.title} style={step(i)}>
+          <figure>
+            <div className="cover-art">
+              <span className="cover-record" aria-hidden="true" />
+              <Image
+                src={album.cover}
+                alt={album.coverAlt}
+                width={720}
+                height={720}
+                sizes="(max-width: 700px) 45vw, (max-width: 1000px) 30vw, 240px"
+              />
+            </div>
+            <figcaption>
+              <cite>
+                {album.title}
+                {album.short && (
+                  <span className="cover-short"> ({album.short})</span>
+                )}
+              </cite>
+              <span className="cover-meta">
+                {album.credit} · {album.year}
+              </span>
+            </figcaption>
+          </figure>
         </li>
       ))}
     </ol>

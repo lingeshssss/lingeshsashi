@@ -244,13 +244,17 @@ export const biography = [
 ];
 // Personal interests, as stated by the owner. Album titles use official styling;
 // credits and release years were checked against public discography records
-// (ICEMAN: Drake solo album, released May 15, 2026). No artwork, streaming links,
-// listening data, released tracks, equipment, or industry affiliations are claimed.
+// (ICEMAN: Drake solo album, released May 15, 2026). Cover art was supplied by
+// the owner and is shown only to identify each album; it remains the property
+// of the respective artists and labels. No streaming links, listening data,
+// released tracks, equipment, or industry affiliations are claimed.
 export type Album = {
   title: string;
   short?: string;
   credit: string;
   year: string;
+  cover: string;
+  coverAlt: string;
 };
 export const music = {
   intro:
@@ -263,11 +267,42 @@ export const music = {
         title: "WE DON’T TRUST YOU",
         credit: "Future & Metro Boomin",
         year: "2024",
+        cover: "/albums/we-dont-trust-you.jpg",
+        coverAlt:
+          "WE DON’T TRUST YOU cover: Metro Boomin and Future in suits on a desert flat at night",
       },
-      { title: "MIXTAPE PLUTO", credit: "Future", year: "2024" },
-      { title: "High Off Life", credit: "Future", year: "2020" },
-      { title: "The WIZRD", credit: "Future", year: "2019" },
-      { title: "DS2", credit: "Future", year: "2015" },
+      {
+        title: "MIXTAPE PLUTO",
+        credit: "Future",
+        year: "2024",
+        cover: "/albums/mixtape-pluto.jpg",
+        coverAlt:
+          "MIXTAPE PLUTO cover: a brick house at night with windows and door glowing pink",
+      },
+      {
+        title: "High Off Life",
+        credit: "Future",
+        year: "2020",
+        cover: "/albums/high-off-life.jpg",
+        coverAlt:
+          "High Off Life cover: black-and-white photo of Future with arms outstretched",
+      },
+      {
+        title: "The WIZRD",
+        credit: "Future",
+        year: "2019",
+        cover: "/albums/the-wizrd.jpg",
+        coverAlt:
+          "The WIZRD cover: Future in an orange-tinted forest framed by a purple border",
+      },
+      {
+        title: "DS2",
+        credit: "Future",
+        year: "2015",
+        cover: "/albums/ds2.jpg",
+        coverAlt:
+          "DS2 cover: blue and purple ink clouds beside a boxed FUTURE DS2 logo",
+      },
     ] as Album[],
   },
   alsoEnjoy: ["NAV", "Metro Boomin", "Drake"],
@@ -275,16 +310,54 @@ export const music = {
     artist: "Drake",
     note: "Drake has one of the deepest catalogs out there. These are my favorite projects of his.",
     albums: [
-      { title: "Her Loss", credit: "Drake & 21 Savage", year: "2022" },
-      { title: "ICEMAN", credit: "Drake", year: "2026" },
-      { title: "Views", credit: "Drake", year: "2016" },
-      { title: "Scorpion", credit: "Drake", year: "2018" },
-      { title: "For All the Dogs", credit: "Drake", year: "2023" },
+      {
+        title: "Her Loss",
+        credit: "Drake & 21 Savage",
+        year: "2022",
+        cover: "/albums/her-loss.jpg",
+        coverAlt:
+          "Her Loss cover: close-up portrait of a woman with braids and dramatic lashes on a lavender background",
+      },
+      {
+        title: "ICEMAN",
+        credit: "Drake",
+        year: "2026",
+        cover: "/albums/iceman.jpg",
+        coverAlt:
+          "ICEMAN cover: a crystal-covered glove making an OK sign above an ICEMAN bead bracelet",
+      },
+      {
+        title: "Views",
+        credit: "Drake",
+        year: "2016",
+        cover: "/albums/views.jpg",
+        coverAlt:
+          "Views cover: Drake sitting on the edge of the CN Tower under a stormy sky",
+      },
+      {
+        title: "Scorpion",
+        credit: "Drake",
+        year: "2018",
+        cover: "/albums/scorpion.jpg",
+        coverAlt:
+          "Scorpion cover: black-and-white portrait of Drake with a handwritten signature",
+      },
+      {
+        title: "For All the Dogs",
+        credit: "Drake",
+        year: "2023",
+        cover: "/albums/for-all-the-dogs-scary-hours.jpg",
+        coverAlt:
+          "For All the Dogs Scary Hours Edition cover: two blue winged fairy silhouettes holding hands on lavender",
+      },
       {
         title: "Certified Lover Boy",
         short: "CLB",
         credit: "Drake",
         year: "2021",
+        cover: "/albums/certified-lover-boy.jpg",
+        coverAlt:
+          "Certified Lover Boy cover: a grid of twelve pregnant-woman emoji in different colors",
       },
     ] as Album[],
   },

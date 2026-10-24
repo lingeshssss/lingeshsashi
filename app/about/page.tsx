@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Connect, PageIntro, Eyebrow, Arrow } from "@/components/ui";
 import {
   AlbumIndex,
-  AlbumSleeves,
+  AlbumCovers,
   StepSequencer,
   Waveform,
 } from "@/components/music";
@@ -88,8 +88,13 @@ export default function About() {
             <h3 className="artist-name">{music.drake.artist}</h3>
             <p>{music.drake.note}</p>
           </div>
-          <AlbumSleeves albums={music.drake.albums} />
+          <AlbumCovers albums={music.drake.albums} />
         </div>
+        <p className="artwork-credit">
+          Album artwork © the respective artists and labels, shown to identify
+          each release. For All the Dogs is pictured with its Scary Hours
+          Edition cover.
+        </p>
       </section>
       <section
         className="section production"
