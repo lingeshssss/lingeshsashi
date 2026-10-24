@@ -105,7 +105,7 @@ export function ProjectCard({
 }
 export function Connect() {
   return (
-    <section className="connect">
+    <section className="connect" data-reveal>
       <div>
         <Eyebrow>GOOD THINGS START WITH A CONVERSATION</Eyebrow>
         <h2>

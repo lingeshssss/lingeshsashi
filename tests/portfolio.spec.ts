@@ -74,6 +74,8 @@ test("keyboard skip link and responsive navigation", async ({
   await page.keyboard.press("Enter");
   expect(await page.evaluate(() => document.activeElement?.id)).toBe("main");
   if (testInfo.project.name === "mobile") {
+    // Closed menu links stay out of the focus order and accessibility tree.
+    await expect(page.locator("#main-nav a").first()).toBeHidden();
     await page.getByRole("button", { name: "Menu", exact: true }).click();
     await expect(
       page.getByRole("navigation", { name: "Main navigation" }),
@@ -207,4 +209,174 @@ test("résumé facts, credential status, PDF download, and project evidence", as
     "href",
     "mailto:lingeshsashi@gmail.com",
   );
+});
+
+test("About page music, production, and interests content", async ({
+  page,
+}) => {
+  await page.goto("/about");
+  await expect(
+    page.getByRole("heading", { name: "A little about me" }),
+  ).toBeVisible();
+  await expect(page.locator(".prose")).toContainText(
+    "B.S. in Computer Science and Data Science (CS&DS)",
+  );
+  const future = page.locator(".music-feature");
+  await expect(
+    future.getByRole("heading", { name: "Future", exact: true }),
+  ).toBeVisible();
+  await expect(future.locator(".album-index li")).toHaveCount(5);
+  await expect(
+    future.locator("li").filter({ hasText: "WE DON’T TRUST YOU" }),
+  ).toContainText("Future & Metro Boomin");
+  for (const title of ["MIXTAPE PLUTO", "High Off Life", "The WIZRD", "DS2"])
+    await expect(future.getByText(title, { exact: true })).toBeVisible();
+  const drake = page.locator(".music-drake");
+  await expect(
+    drake.getByRole("heading", { name: "Drake", exact: true }),
+  ).toBeVisible();
+  await expect(drake.locator(".album-sleeves li")).toHaveCount(6);
+  await expect(
+    drake.locator("li").filter({ hasText: "Her Loss" }),
+  ).toContainText("Drake & 21 Savage");
+  for (const title of [
+    "ICEMAN",
+    "Views",
+    "Scorpion",
+    "For All the Dogs",
+    "Certified Lover Boy",
+  ])
+    await expect(drake.locator("cite").filter({ hasText: title })).toHaveCount(
+      1,
+    );
+  await expect(drake).toContainText("(CLB)");
+  await expect(page.locator(".also-enjoy")).toContainText(
+    "I also enjoy NAV, Metro Boomin, and Drake.",
+  );
+  const production = page.locator(".production");
+  await expect(production).toContainText("music production");
+  await expect(production).toContainText("Southside");
+  await expect(production).toContainText("ATL Jacob");
+  await expect(production.locator("figcaption")).toContainText(
+    "does not play audio",
+  );
+  await expect(
+    page.getByRole("heading", { name: "Engineering in motion." }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Ideas into action." }),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "@2fast-m3" })).toHaveAttribute(
+    "href",
+    "https://www.youtube.com/@2fast-m3",
+  );
+  // Decorative only: no media, players, artwork, or controls in music sections.
+  await expect(
+    page.locator(".music, .production").locator("audio, video, iframe, img"),
+  ).toHaveCount(0);
+  await expect(
+    page.locator(".music, .production").locator("button, a"),
+  ).toHaveCount(0);
+  await expect(page.locator(".waveform")).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
+  expect(await page.locator("main").innerText()).not.toMatch(
+    /\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}/,
+  );
+});
+
+const revealTargets = "[data-reveal], [data-reveal-stagger] > *";
+async function hiddenRevealCount(page: import("@playwright/test").Page) {
+  return page.locator(revealTargets).evaluateAll(
+    (els) =>
+      els.filter((el) => {
+        const style = getComputedStyle(el);
+        return style.opacity !== "1" || style.transform !== "none";
+      }).length,
+  );
+}
+
+test("reduced motion shows all content immediately without animation", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const route of ["/", "/about", "/experience", "/contact"]) {
+    await page.goto(route);
+    expect(await page.locator(revealTargets).count()).toBeGreaterThan(0);
+    // Nothing scrolled, yet every below-the-fold reveal target is shown.
+    expect(await hiddenRevealCount(page), route).toBe(0);
+    expect(
+      await page
+        .locator("h1")
+        .evaluate((el) => getComputedStyle(el).animationName),
+    ).toBe("none");
+  }
+  expect(
+    await page
+      .locator(".button.primary")
+      .first()
+      .evaluate((el) => getComputedStyle(el).transitionDuration),
+  ).toMatch(/^0s/);
+});
+
+test("scroll reveals show content on scroll and on keyboard focus", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/about");
+  await expect(page.locator("html")).toHaveAttribute("data-hydrated", "");
+  const connect = page.locator(".connect");
+  await expect(connect).not.toHaveAttribute("data-revealed");
+  // Tabbing to a link inside an unrevealed section must make it visible.
+  await page
+    .locator(".connect .button")
+    .evaluate((el: HTMLElement) => el.focus({ preventScroll: true }));
+  await expect(connect).not.toHaveAttribute("data-revealed");
+  await expect(connect).toHaveCSS("opacity", "1");
+  const sleeves = page.locator(".album-sleeves");
+  await sleeves.scrollIntoViewIfNeeded();
+  await expect(sleeves).toHaveAttribute("data-revealed", "");
+  await expect(sleeves.locator("li").last()).toHaveCSS("opacity", "1");
+  const height = await page.evaluate(() => document.body.scrollHeight);
+  for (let y = 0; y < height; y += 500) {
+    await page.evaluate((y) => scrollTo(0, y), y);
+    await page.waitForTimeout(50);
+  }
+  await expect(
+    page.locator(
+      "[data-reveal]:not([data-revealed]), [data-reveal-stagger]:not([data-revealed])",
+    ),
+  ).toHaveCount(0);
+  await expect.poll(() => hiddenRevealCount(page)).toBe(0);
+  await page.evaluate(() => {
+    document
+      .querySelectorAll("[data-revealed]")
+      .forEach((el) => el.removeAttribute("data-revealed"));
+  });
+  await page.emulateMedia({ media: "print" });
+  expect(await hiddenRevealCount(page)).toBe(0);
+});
+
+test("content and navigation remain available without JavaScript", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    viewport: { width: 390, height: 844 },
+  });
+  const page = await context.newPage();
+  await page.goto("/about");
+  await page.waitForTimeout(1000);
+  expect(await hiddenRevealCount(page)).toBe(0);
+  await expect(page.locator(".album-sleeves li").last()).toBeVisible();
+  await expect(page.getByRole("button", { name: "Menu" })).toBeHidden();
+  const nav = page.getByRole("navigation", { name: "Main navigation" });
+  await expect(
+    nav.getByRole("link", { name: "Contact", exact: true }),
+  ).toBeVisible();
+  await expect(
+    nav.getByRole("link", { name: "Contact", exact: true }),
+  ).toHaveCSS("opacity", "1");
+  await context.close();
 });

@@ -31,6 +31,10 @@ npm run test:e2e
 
 Playwright checks desktop and mobile routes in both themes, WCAG A/AA automated accessibility, overflow, internal links, project filtering, keyboard navigation, theme persistence, print behavior, contact destinations, 404, and SEO endpoints. Tests start a production server automatically when one is not already running; build first. This cloud machine supplies Chromium at `/usr/bin/chromium`. Elsewhere install Chromium with `npx playwright install chromium`, locate its executable with `node -e "console.log(require('@playwright/test').chromium.executablePath())"`, and set `CHROMIUM_PATH` to that path when running tests. Automated accessibility checks complement human review.
 
+## Motion
+
+Motion tokens (durations, easing, stagger, distance) live at the top of `app/globals.css`; animations use transform and opacity. Page introductions and the engineering dial animate once with CSS only. Scroll reveals use `data-reveal` (single element) or `data-reveal-stagger` (children in sequence); `components/motion.tsx` marks them `data-revealed` via IntersectionObserver. Hidden states apply only while the head script's `motion-ready` class is present and `prefers-reduced-motion` is not `reduce`; if the app does not hydrate within four seconds, the classes are removed. Without JavaScript, content is visible and the mobile navigation is listed inline. Focused content and printed pages are never hidden. Reduced-motion users get no animations or transitions.
+
 ## Content and evidence
 
 Edit `lib/content.ts`. `missingContent` is a private editorial checklist (never rendered into public pages). `pendingProjectSources` retains supplied sources still needing review.
@@ -41,6 +45,7 @@ Edit `lib/content.ts`. `missingContent` is a private editorial checklist (never 
 - CampusOS: implementation, stack, and contributions now follow the résumé. The supplied public URL previously resolved to sign-in; its screenshot is `public/campusos-sign-in.webp`. Authenticated features and source code have not been independently tested.
 - MarketPilot AI: the résumé describes a Python / Claude API market-analysis assistant, correcting the earlier marketing-app lead. Its résumé-backed case study is published, but the protected deployment URL is not exposed as a public demo. No investment returns or recommendation accuracy are claimed.
 - Client website work and founder/robotics/karate context come from the original brief where not detailed in the résumé. Client names, examples, metrics, and unprovided dates remain withheld.
+- About-page music, production, car, and entrepreneurship interests (`music` and `interests` in `lib/content.ts`) are the owner’s stated preferences. Album titles use official styling; credits and release years were checked against public discography records (collaborations: Future & Metro Boomin’s *WE DON’T TRUST YOU*, Drake & 21 Savage’s *Her Loss*; *ICEMAN* is Drake’s solo album released May 15, 2026). Album artwork, streaming links, and audio are intentionally omitted: album “sleeves” are typographic CSS treatments, and the waveform and step-sequencer graphics are decorative. No listening data, released tracks, equipment, or industry affiliations are claimed.
 - Email comes from the résumé. LinkedIn, GitHub, and YouTube identities come from the owner. The Microsoft credential profile path is visible in the supplied screenshot; individual credential verification URLs are still needed.
 
 ### Public résumé PDF

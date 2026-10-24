@@ -59,7 +59,7 @@ export default async function Project({
       </section>
       <ProjectVisual project={p} />
       {p.screenshot && (
-        <figure className="project-screenshot">
+        <figure className="project-screenshot" data-reveal>
           <Image
             src={p.screenshot}
             alt="CampusOS public sign-in page, with a green introductory panel and email and Google sign-in options"
@@ -73,7 +73,7 @@ export default async function Project({
           </figcaption>
         </figure>
       )}
-      <section className="section detail-body">
+      <section className="section detail-body" data-reveal-stagger>
         <aside>
           <p className="small-label">ROLE</p>
           <p>{p.role}</p>

@@ -22,7 +22,9 @@ function EngineeringVisual() {
             <Arrow />
           </span>
         </div>
-        <span className="dial-point" />
+        <span className="dial-track">
+          <span className="dial-point" />
+        </span>
       </div>
       <div className="drawing-bottom">
         <span>
@@ -76,7 +78,7 @@ export default function Home() {
         <span>SOFTWARE · AI · CLOUD · SECURITY</span>
       </div>
       <section className="section">
-        <div className="section-heading">
+        <div className="section-heading" data-reveal>
           <div>
             <Eyebrow>01 / SELECTED EXPLORATIONS</Eyebrow>
             <h2>Ideas with a purpose.</h2>
@@ -85,7 +87,7 @@ export default function Home() {
             Explore projects <Arrow />
           </Link>
         </div>
-        <div className="featured-grid">
+        <div className="featured-grid" data-reveal-stagger>
           <ProjectCard />
           <aside className="project-aside">
             <svg
@@ -116,7 +118,7 @@ export default function Home() {
         </div>
       </section>
       <section className="section approach">
-        <div>
+        <div data-reveal>
           <Eyebrow>02 / HOW I THINK</Eyebrow>
           <h2>
             Curious by nature.
@@ -127,7 +129,7 @@ export default function Home() {
             My experience <Arrow />
           </Link>
         </div>
-        <div className="strength-list">
+        <div className="strength-list" data-reveal-stagger>
           {[
             [
               "01",
@@ -155,7 +157,7 @@ export default function Home() {
           ))}
         </div>
       </section>
-      <div className="tool-strip">
+      <div className="tool-strip" data-reveal>
         <span>A GROWING TOOLKIT</span>
         <p>{profile.skills.join("   /   ")}</p>
       </div>
