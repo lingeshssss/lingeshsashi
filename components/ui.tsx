@@ -46,20 +46,35 @@ export function PageIntro({
     </section>
   );
 }
-export function ProjectVisual({ small = false }: { small?: boolean }) {
+export function ProjectVisual({
+  project = projects[0],
+}: {
+  project?: (typeof projects)[number];
+}) {
+  const market = project.slug === "marketpilot-ai";
   return (
     <div
-      className={small ? "project-visual compact" : "project-visual"}
+      className={market ? "project-visual market-visual" : "project-visual"}
       role="img"
-      aria-label="CampusOS typographic concept artwork, not an application screenshot"
+      aria-label={`${project.title} editorial artwork, not an application screenshot`}
     >
-      <span className="visual-index">EXPLORATION / 001</span>
+      <span className="visual-index">
+        {market ? "AI EXPLORATION / 002" : "FULL-STACK APPLICATION / 001"}
+      </span>
       <div className="campus-mark">
-        c<span>o</span>
+        {market ? (
+          <>
+            m<span>p</span>
+          </>
+        ) : (
+          <>
+            c<span>o</span>
+          </>
+        )}
       </div>
       <div className="visual-bottom">
-        <span>CampusOS</span>
-        <span>STUDENT LIFE, CONNECTED</span>
+        <span>{project.title}</span>
+        <span>{market ? "DATA → INSIGHT" : "STUDENT LIFE, CONNECTED"}</span>
       </div>
     </div>
   );
@@ -71,7 +86,7 @@ export function ProjectCard({
 }) {
   return (
     <Link href={"/projects/" + project.slug} className="project-card">
-      <ProjectVisual />
+      <ProjectVisual project={project} />
       <div className="project-meta">
         <div>
           <p className="small-label">
@@ -79,6 +94,7 @@ export function ProjectCard({
           </p>
           <h3>{project.title}</h3>
           <p>{project.description}</p>
+          <p className="project-stack">{project.technologies.join(" · ")}</p>
         </div>
         <span className="circle-arrow">
           <Arrow />

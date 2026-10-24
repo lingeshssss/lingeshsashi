@@ -20,7 +20,10 @@ export default function Experience() {
       <section className="section timeline-section">
         <div>
           <Eyebrow>EXPERIENCE & INVOLVEMENT</Eyebrow>
-          <p className="muted">A thematic overview of my background.</p>
+          <p className="muted">
+            Professional roles, followed by community and leadership
+            involvement.
+          </p>
         </div>
         <div className="timeline">
           {experience.map((e, i) => (
@@ -31,6 +34,7 @@ export default function Experience() {
                   {e.type} / {e.organization}
                 </p>
                 <h2>{e.title}</h2>
+                {e.dates && <p className="experience-dates">{e.dates}</p>}
                 <p>{e.description}</p>
               </div>
             </article>

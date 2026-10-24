@@ -32,8 +32,7 @@ export function ProjectCollection() {
         ))}
       </div>
       <p className="sr-only" aria-live="polite">
-        {shown.length}{" "}
-        {filter === "All" ? "project" : "product thinking project"} shown
+        {shown.length} {shown.length === 1 ? "project" : "projects"} shown
       </p>
       <div className="project-collection">
         {shown.map((project) => (

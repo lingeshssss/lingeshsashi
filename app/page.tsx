@@ -137,7 +137,7 @@ export default function Home() {
             [
               "02",
               "Keep learning",
-              "Interests spanning AI, cloud computing, and cybersecurity, with internship experience at NJCICC.",
+              "Interests spanning AI, cloud computing, and cybersecurity, with internship experience at NJCCIC.",
             ],
             [
               "03",

@@ -52,55 +52,59 @@ export default async function Project({
               target="_blank"
               rel="noopener noreferrer"
             >
-              Visit CampusOS <Arrow />
+              Visit {p.title} <Arrow />
             </a>
           )}
         </div>
       </section>
-      <ProjectVisual />
-      <figure className="project-screenshot">
-        <Image
-          src="/campusos-sign-in.webp"
-          alt="CampusOS public sign-in page, with a green introductory panel and email and Google sign-in options"
-          width={1440}
-          height={1000}
-          sizes="(max-width: 700px) 100vw, 1100px"
-        />
-        <figcaption>
-          CampusOS public sign-in page. Authenticated app features are outside
-          the scope of this preview.
-        </figcaption>
-      </figure>
+      <ProjectVisual project={p} />
+      {p.screenshot && (
+        <figure className="project-screenshot">
+          <Image
+            src={p.screenshot}
+            alt="CampusOS public sign-in page, with a green introductory panel and email and Google sign-in options"
+            width={1440}
+            height={1000}
+            sizes="(max-width: 700px) 100vw, 1100px"
+          />
+          <figcaption>
+            CampusOS public sign-in page. Authenticated app features are outside
+            the scope of this preview.
+          </figcaption>
+        </figure>
+      )}
       <section className="section detail-body">
         <aside>
-          <p className="small-label">PROJECT TYPE</p>
-          <p>Student companion</p>
-          <p className="small-label">DOCUMENTATION</p>
-          <p>Public entry page reviewed</p>
-          <p className="small-label">VISUAL</p>
-          <p>Concept artwork</p>
+          <p className="small-label">ROLE</p>
+          <p>{p.role}</p>
+          <p className="small-label">YEAR</p>
+          <p>{p.year}</p>
+          <p className="small-label">TECHNOLOGIES</p>
+          <p>{p.technologies.join(" · ")}</p>
+          <p className="small-label">STATUS</p>
+          <p>{p.label}</p>
         </aside>
         <div className="prose">
-          <Eyebrow>THE OPPORTUNITY</Eyebrow>
+          <Eyebrow>THE PROBLEM</Eyebrow>
           <h2>
-            A little less friction.
-            <br />
-            More room for college.
+            {p.slug === "campus-os"
+              ? "More room for college."
+              : "From market data to insight."}
           </h2>
           <p>{p.problem}</p>
-          <h3>Areas to explore</h3>
+          <h3>What I built</h3>
+          <p>{p.built}</p>
+          <h3>Key features</h3>
           <ul>
             {p.scope.map((s) => (
               <li key={s}>{s}</li>
             ))}
           </ul>
-          <h3>Where it stands</h3>
-          <p>{p.note}</p>
-          <p>
-            Technical approach, lessons learned, and outcomes will be added
-            alongside supporting source material. The artwork above is an
-            editorial illustration of the idea.
-          </p>
+          <h3>Technical approach</h3>
+          <p>{p.approach}</p>
+          <h3>Outcomes & evidence</h3>
+          <p>{p.outcome}</p>
+          <p className="project-evidence">{p.note}</p>
         </div>
       </section>
       <Connect />

@@ -31,8 +31,8 @@ export default function Contact() {
             cybersecurity.
           </p>
           <p className="contact-copy">
-            Connect with me on LinkedIn to start a conversation, or explore my
-            public work on GitHub.
+            Send me an email to start a conversation, connect on LinkedIn, or
+            explore my public work on GitHub.
           </p>
           <a
             className="button primary"
@@ -44,6 +44,14 @@ export default function Contact() {
           </a>
         </div>
         <div className="contact-links">
+          <a href={`mailto:${profile.email}`}>
+            <div>
+              <span className="small-label">SAY HELLO</span>
+              <h3>Email</h3>
+              <p>{profile.email}</p>
+            </div>
+            <Arrow />
+          </a>
           <a href={profile.linkedin!} target="_blank" rel="noopener noreferrer">
             <div>
               <span className="small-label">START A CONVERSATION</span>

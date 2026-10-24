@@ -1466,3 +1466,188 @@ footer {
     margin-top: 30px;
   }
 }
+.resume-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.resume-row ul {
+  margin: 8px 0 0;
+  padding-left: 17px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.85;
+}
+.resume-row article {
+  break-inside: avoid;
+}
+.resume-row > div > article + article {
+  margin-top: 24px;
+}
+.resume-row .resume-position {
+  color: var(--text);
+}
+.resume-row .credential-source {
+  margin: 0 0 20px;
+  font-size: 12px;
+}
+.credential-status {
+  font-weight: 600;
+}
+.credential-status.expired {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.credential-record {
+  margin-top: 22px;
+}
+.experience-dates {
+  font-family: "Courier New", monospace;
+  font-size: 11px !important;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.market-visual {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.market-visual:before {
+  border-color: var(--accent);
+  opacity: 0.2;
+}
+.market-visual:after {
+  opacity: 0.08;
+}
+.project-stack {
+  font-family: "Courier New", monospace;
+  font-size: 10px !important;
+  color: var(--text);
+  margin-top: 12px;
+}
+.project-collection {
+  display: grid;
+  max-width: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 48px 32px;
+}
+.project-collection .project-visual {
+  height: 320px;
+}
+.project-evidence {
+  font-size: 12px !important;
+  border-left: 2px solid var(--line);
+  padding-left: 18px;
+}
+.filters {
+  flex-wrap: wrap;
+}
+.contact-links p {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+  .project-collection {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .project-collection .project-visual {
+    height: 290px;
+  }
+  .resume-actions {
+    width: 100%;
+    max-width: 270px;
+  }
+}
+@media print {
+  .resume-sheet {
+    font-size: 10pt;
+  }
+  .resume-row ul {
+    font-size: 10pt;
+    line-height: 1.5;
+  }
+  .resume-row {
+    display: block;
+    padding: 16px 0;
+  }
+  .resume-row > h3 {
+    font-size: 12pt;
+    margin-bottom: 12px;
+  }
+  .resume-header p {
+    font-size: 10pt;
+  }
+  .resume-row h4 {
+    font-size: 11pt;
+  }
+  .resume-row article {
+    break-inside: avoid;
+  }
+  .resume-row {
+    break-inside: auto;
+  }
+  .credential-source {
+    font-size: 9pt !important;
+  }
+  .resume-row > div > article + article {
+    margin-top: 14px;
+  }
+  .resume-row p {
+    line-height: 1.5;
+  }
+  .resume-row .credential h4 {
+    font-size: 10pt;
+  }
+  .resume-row .credential p {
+    font-size: 9pt;
+  }
+}
+.resume-row ul {
+  list-style: disc;
+}
+@media print {
+  .resume-actions,
+  .print-control {
+    display: none !important;
+  }
+  .resume-header h2 {
+    font-size: 22pt;
+  }
+  .resume-header p {
+    font-size: 9.5pt;
+    margin: 8px 0 3px;
+  }
+  .resume-row {
+    padding: 10px 0;
+  }
+  .resume-row > h3 {
+    font-size: 11pt;
+    margin: 0 0 8px;
+    break-after: avoid;
+  }
+  .resume-row h4 {
+    font-size: 10.5pt;
+    line-height: 1.35;
+  }
+  .resume-row p,
+  .resume-row ul {
+    font-size: 9.5pt;
+    line-height: 1.4;
+  }
+  .resume-row ul {
+    margin-top: 5px;
+  }
+  .resume-row > div > article + article {
+    margin-top: 12px;
+  }
+  .resume-row .credential-source {
+    margin-bottom: 12px;
+  }
+  .credential-record {
+    margin-top: 12px;
+  }
+  @page {
+    margin: 12mm;
+  }
+}

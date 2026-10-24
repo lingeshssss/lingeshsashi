@@ -3,7 +3,7 @@ import { Connect, PageIntro } from "@/components/ui";
 import { ProjectCollection } from "@/components/project-collection";
 export const metadata: Metadata = {
   description:
-    "Explore CampusOS and the practical problems behind Lingesh’s project ideas.",
+    "Explore CampusOS and MarketPilot AI, projects spanning full-stack development and AI-assisted market analysis.",
   title: "Projects",
   ...(process.env.SITE_URL ? { alternates: { canonical: "/projects" } } : {}),
 };
@@ -19,8 +19,8 @@ export default function Projects() {
       <section className="section projects-section">
         <ProjectCollection />
         <p className="editorial-note">
-          Each project page distinguishes its proposed direction from
-          independently reviewed functionality.
+          Implementation details come from my résumé. Each project page
+          identifies the scope of its public preview and independent review.
         </p>
       </section>
       <Connect />

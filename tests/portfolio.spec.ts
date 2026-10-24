@@ -5,6 +5,7 @@ const routes = [
   "/about",
   "/projects",
   "/projects/campus-os",
+  "/projects/marketpilot-ai",
   "/experience",
   "/resume",
   "/contact",
@@ -98,9 +99,9 @@ test("keyboard skip link and responsive navigation", async ({
 });
 test("project filtering, contact, print and 404", async ({ page }) => {
   await page.goto("/projects");
-  await page.getByRole("button", { name: "Product thinking" }).click();
+  await page.getByRole("button", { name: "Web applications" }).click();
   await expect(
-    page.getByRole("button", { name: "Product thinking" }),
+    page.getByRole("button", { name: "Web applications" }),
   ).toHaveAttribute("aria-pressed", "true");
   await page.locator(".project-card").click();
   await expect(page).toHaveURL("/projects/campus-os");
@@ -126,6 +127,7 @@ test("project filtering, contact, print and 404", async ({ page }) => {
   await page.emulateMedia({ media: "print" });
   await expect(page.locator("header")).toBeHidden();
   await expect(page.locator(".resume-sheet")).toBeVisible();
+  await expect(page.locator(".resume-actions")).toBeHidden();
   await page.emulateMedia({ media: "screen" });
   const response = await page.goto("/missing-page");
   expect(response?.status()).toBe(404);
@@ -155,4 +157,54 @@ test("narrow phone and tablet layouts remain within viewport", async ({
       ).toBe(true);
     }
   }
+});
+
+test("résumé facts, credential status, PDF download, and project evidence", async ({
+  page,
+  request,
+}) => {
+  await page.goto("/resume");
+  await expect(
+    page.getByText(
+      "School of Arts and Sciences · B.S. in Computer Science and Data Science (CS&DS)",
+    ),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Cybersecurity Intern", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Jun 2025 – Aug 2025", { exact: false }),
+  ).toBeVisible();
+  await expect(page.locator(".credential")).toHaveCount(5);
+  await expect(page.locator(".credential-status.active")).toHaveCount(4);
+  const expired = page
+    .locator(".credential")
+    .filter({ hasText: "Azure Data Scientist Associate" });
+  await expect(expired.getByText("Expired", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Download Résumé" }),
+  ).toHaveAttribute("download", "");
+  const pdf = await request.get("/lingesh-sashi-kumar-resume.pdf");
+  expect(pdf.status()).toBe(200);
+  expect(pdf.headers()["content-type"]).toContain("application/pdf");
+  expect((await pdf.body()).subarray(0, 5).toString()).toBe("%PDF-");
+  await page.goto("/projects");
+  await expect(page.locator(".project-card")).toHaveCount(2);
+  await page.getByRole("button", { name: "AI applications" }).click();
+  await expect(page.locator(".project-card")).toHaveCount(1);
+  await page.locator(".project-card").click();
+  await expect(page).toHaveURL("/projects/marketpilot-ai");
+  await expect(
+    page.getByRole("heading", { name: "Key features" }),
+  ).toBeVisible();
+  await expect(page.locator("main")).toContainText("Claude API");
+  await expect(page.locator("main")).not.toContainText("marketing");
+  await expect(
+    page.getByRole("link", { name: /Visit MarketPilot/ }),
+  ).toHaveCount(0);
+  await page.goto("/contact");
+  await expect(page.getByRole("link", { name: /SAY HELLO/ })).toHaveAttribute(
+    "href",
+    "mailto:lingeshsashi@gmail.com",
+  );
 });

@@ -5,7 +5,7 @@ export function PrintButton() {
       className="button secondary print-control"
       onClick={() => window.print()}
     >
-      Print this page <span aria-hidden="true">↗</span>
+      Print this page <span aria-hidden="true">→</span>
     </button>
   );
 }

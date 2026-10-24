@@ -1,6 +1,6 @@
 # Lingesh Sashi Kumar — portfolio
 
-A personal portfolio built with Next.js App Router, TypeScript, and Tailwind CSS. Six main pages, a CampusOS detail page, custom 404, generated social image, and light/dark themes. Portfolio content is statically rendered; there is no contact backend or database.
+A personal portfolio built with Next.js App Router, TypeScript, and Tailwind CSS. Six main pages, CampusOS and MarketPilot AI detail pages, custom 404, generated social image, and light/dark themes. Portfolio content is statically rendered; there is no contact backend or database.
 
 ## Local development
 
@@ -35,24 +35,35 @@ Playwright checks desktop and mobile routes in both themes, WCAG A/AA automated 
 
 Edit `lib/content.ts`. `missingContent` is a private editorial checklist (never rendered into public pages). `pendingProjectSources` retains supplied sources still needing review.
 
-- Background statements come from the owner's brief; no official degree, internship dates or title, metrics, credential claims, or testimonials are inferred.
-- CampusOS: the supplied public URL resolves to sign-in. Its real public-page screenshot is stored in `public/campusos-sign-in.webp`. Schedule organization, textbook discovery, and personalized tools are proposed areas from the owner's brief, not tested app capabilities. No stack, code contributions, or outcomes are claimed.
-- MarketPilot: the supplied preview redirects to Vercel deployment protection. It is withheld until there is a public preview, source code, or a documented project account. No attempt was made to bypass access controls.
-- Client websites and certifications are withheld pending supporting information and display permission where applicable.
-- LinkedIn, GitHub, and YouTube use owner-supplied profile identities. CampusOS's public page was checked; LinkedIn and YouTube account ownership has not been independently authenticated.
-- The HTML résumé is a background summary, not a transcription of an unseen PDF. No download button is shown. When the résumé arrives, reconcile the page, then add the real PDF under `public/` and connect `profile.resumePdf` to a download link. Do not publish phone or home address.
+- The uploaded `Lingesh_Sashi_Kumar_Resume.docx` is the primary source for education, dated internships, technical skills, project implementation, and leadership details. Its phone number is excluded from all public pages and downloads. The original DOCX is not stored in this repository or served publicly.
+- The exact degree is B.S. in Computer Science and Data Science (CS&DS), School of Arts and Sciences, expected May 2030. NJCCIC’s full organization name and the Cybersecurity Intern title and dates come from the résumé. Codestax and Prince Martial Arts roles are also included.
+- The five unique Microsoft certifications, earned dates, and statuses come from the supplied credential screenshot. It shows four active certifications and an **expired** Azure Data Scientist Associate credential. This is a record supplied by the owner, not a live verification of current status; update it when credentials renew or expire. Exact exam codes are not treated as additional certifications. No exact expiry date is invented for the expired credential.
+- CampusOS: implementation, stack, and contributions now follow the résumé. The supplied public URL previously resolved to sign-in; its screenshot is `public/campusos-sign-in.webp`. Authenticated features and source code have not been independently tested.
+- MarketPilot AI: the résumé describes a Python / Claude API market-analysis assistant, correcting the earlier marketing-app lead. Its résumé-backed case study is published, but the protected deployment URL is not exposed as a public demo. No investment returns or recommendation accuracy are claimed.
+- Client website work and founder/robotics/karate context come from the original brief where not detailed in the résumé. Client names, examples, metrics, and unprovided dates remain withheld.
+- Email comes from the résumé. LinkedIn, GitHub, and YouTube identities come from the owner. The Microsoft credential profile path is visible in the supplied screenshot; individual credential verification URLs are still needed.
+
+### Public résumé PDF
+
+`public/lingesh-sashi-kumar-resume.pdf` is a generated public version of the HTML résumé, including the updated credential statuses and excluding phone/address data. It is not a renamed or converted original DOCX. To refresh it after changing content, first build and start the updated site, then run in another terminal:
+
+```sh
+npm run resume:pdf
+```
+
+The export script reads the local `/resume` page with Chromium and its print stylesheet. It does not upload the source document or contact a third-party converter. An optional base URL argument supports another local port: `npm run resume:pdf -- http://127.0.0.1:3100`. Set `CHROMIUM_PATH` where needed, as for browser tests. Restart the production server after the first export so Next.js discovers the new public file. Review the generated PDF and rerun checks before committing it. Print controls are excluded from the PDF.
 
 ### Still needed
 
-1. Original résumé PDF, exact education title, professional role details, dates, and approved responsibilities.
-2. Project repositories, implementation status, stack, contribution details, decisions, challenges, and supported results; accessible MarketPilot preview.
-3. Credential verification links and completion dates; check overlapping Microsoft credentials before adding a certification section.
-4. Optional portrait, public email, and permission to display client work.
-5. Actual portfolio domain for `SITE_URL`.
+1. Source repositories, independently tested release status, challenges/lessons, and supported outcomes for projects; an accessible MarketPilot preview or screenshots.
+2. Individual credential verification URLs and the Data Scientist credential’s exact expiry date, if desired. Maintain statuses as credentials change.
+3. Calendar dates for client work, volunteer teaching, and leadership; client display permission and samples.
+4. Optional portrait and the real portfolio domain for `SITE_URL`.
+5. Optional delivery-service configuration only if a server-side contact form is requested.
 
 ## Contact
 
-The working contact action opens the supplied LinkedIn profile. GitHub and YouTube links are also available. No form is shipped because no email or delivery service was supplied. There is no fake success state. If an email is provided, add it to `profile` and expose a mail link. A future form requires a server route, delivery provider credentials kept server-side, input validation, accessible feedback, distributed rate limiting, spam protection, and delivery success/failure integration tests before it is exposed. Provider credentials must never enter `NEXT_PUBLIC_*` variables or version control.
+The contact page has a real `mailto:` link to the email in the résumé, alongside LinkedIn, GitHub, and YouTube links. No form is shipped without configured delivery; there is no simulated success state. A future form requires a server route, delivery provider credentials kept server-side, input validation, accessible feedback, distributed rate limiting, spam protection, and delivery success/failure integration tests before it is exposed. Provider credentials must never enter `NEXT_PUBLIC_*` variables or version control.
 
 ## Deployment
 
