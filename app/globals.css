@@ -1718,6 +1718,12 @@ html:not(.js) .theme-toggle {
     border: 0;
     margin: 0;
   }
+  *,
+  *:before,
+  *:after {
+    animation: none !important;
+    transition: none !important;
+  }
   [data-reveal],
   [data-reveal-stagger] > * {
     opacity: 1 !important;

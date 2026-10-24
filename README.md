@@ -50,7 +50,11 @@ Edit `lib/content.ts`. `missingContent` is a private editorial checklist (never 
 
 ### Public résumé PDF
 
-`public/lingesh-sashi-kumar-resume.pdf` is a generated public version of the HTML résumé, including the updated credential statuses and excluding phone/address data. It is not a renamed or converted original DOCX. To refresh it after changing content, first build and start the updated site, then run in another terminal:
+`public/lingesh-sashi-kumar-resume.pdf` is the owner’s uploaded PDF résumé with the phone number removed by true redaction (the text is deleted, not covered) and the contact line re-set as “email | New Brunswick, NJ”. All other content is unchanged. The PDF lists certifications by earned date only; the HTML résumé page continues to show active/expired status.
+
+To replace it with a newer résumé, redact the phone number before committing, or ask an assistant to do so. Confirm with `pdftotext` or a text search that no phone number remains.
+
+Alternatively, `npm run resume:pdf` regenerates the file from the HTML résumé page instead, which overwrites the uploaded version. To use it, first build and start the updated site, then run in another terminal:
 
 ```sh
 npm run resume:pdf
