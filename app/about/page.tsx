@@ -13,13 +13,7 @@ import {
   StepSequencer,
   Waveform,
 } from "@/components/music";
-import {
-  biography,
-  carInterest,
-  interests,
-  music,
-  profile,
-} from "@/lib/content";
+import { biography, interests, music, profile } from "@/lib/content";
 export const metadata: Metadata = {
   description:
     "Meet Lingesh Sashi Kumar, a Rutgers student interested in software, AI, cybersecurity, music production, cars, and entrepreneurship.",
@@ -75,60 +69,36 @@ export default function About() {
         </div>
       </section>
       <section className="section car-story" aria-labelledby="car-heading">
-        <SectionHead index="§ 02" label="THE REFERENCE CAR" id="car-heading">
+        <SectionHead index="§ 02" label="CARS" id="car-heading">
           Engineering in motion.
         </SectionHead>
         <div className="car-story-grid">
           <CarDrawing
             view="threeQuarter"
-            index="03"
-            annotate
+            id="about"
             className="car-story-main"
           />
           <div className="car-story-copy" data-reveal-stagger>
-            {carInterest.paragraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
+            <p className="car-favorite">
+              <span className="small-label">FAVORITE CAR</span>
+              <span>BMW M8 Competition Gran Coupe</span>
+            </p>
             <p>
               Cars are one of my biggest interests. I founded and led an
               automotive engineering and design club, and I share the interest
               on my automotive YouTube channel.
             </p>
-            <a
-              className="text-link"
-              href={profile.youtube}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              @2fast-m3 <Arrow />
-            </a>
+            <div className="actions">
+              <a
+                className="text-link"
+                href={profile.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                @2fast-m3 <Arrow />
+              </a>
+            </div>
           </div>
-        </div>
-        <div className="car-details">
-          <table className="design-map" data-reveal>
-            <caption>From the car to this site</caption>
-            <thead>
-              <tr>
-                <th scope="col">Reference</th>
-                <th scope="col">On the car</th>
-                <th scope="col">On this site</th>
-              </tr>
-            </thead>
-            <tbody>
-              {carInterest.mapping.map(([ref, onCar, onSite], i) => (
-                <tr key={ref}>
-                  <th scope="row">
-                    <span className="map-index">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>{" "}
-                    {ref}
-                  </th>
-                  <td>{onCar}</td>
-                  <td>{onSite}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
       </section>
       <section className="section music" aria-labelledby="music-heading">

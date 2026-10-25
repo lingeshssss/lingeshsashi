@@ -427,21 +427,15 @@ test("home hero shows identity and actions in the first viewport", async ({
     expect(offset).toMatch(/^0(px)?$/);
 });
 
-test("car appears as original line drawings, not published photos", async ({
+test("car drawings are decorative and no car photos are published", async ({
   page,
 }) => {
   for (const route of ["/", "/about", "/contact"]) {
     await page.goto(route);
-    const drawings = page.locator(".car-drawing svg");
+    const drawings = page.locator(".car-drawing");
     expect(await drawings.count(), route).toBeGreaterThan(0);
-    for (const svg of await drawings.all()) {
-      await expect(svg).toHaveAttribute("role", "img");
-      await expect(svg).toHaveAttribute(
-        "aria-label",
-        /Line drawing of the BMW M8 Competition Gran Coupe/,
-      );
-    }
-    // No car photographs are served; reference photos stay private.
+    for (const drawing of await drawings.all())
+      await expect(drawing).toHaveAttribute("aria-hidden", "true");
     for (const src of await page
       .locator("main img")
       .evaluateAll((imgs) => imgs.map((i) => i.getAttribute("src") || "")))
@@ -449,11 +443,43 @@ test("car appears as original line drawings, not published photos", async ({
     for (const svg of await page.locator(".contour-rule").all())
       await expect(svg).toHaveAttribute("aria-hidden", "true");
   }
-  await expect(page.locator("footer")).toContainText("not affiliated with BMW");
-  await page.goto("/about");
-  await expect(page.locator(".design-map tbody tr")).toHaveCount(4);
+  await expect(page.locator("footer")).toContainText("Not affiliated with BMW");
   await page.goto("/projects");
   await expect(page.locator(".project-card img")).toHaveAttribute("alt", "");
+});
+
+test("motion follows scrolling, and stops with reduced motion", async ({
+  browser,
+}) => {
+  const read = (page: import("@playwright/test").Page) =>
+    page.evaluate(() => ({
+      spin: getComputedStyle(document.querySelector(".wheel-spin")!).transform,
+      progress: getComputedStyle(document.querySelector(".scroll-progress")!)
+        .transform,
+    }));
+  const moving = await browser.newContext({ reducedMotion: "no-preference" });
+  let page = await moving.newPage();
+  await page.goto("/");
+  await page.waitForTimeout(2000);
+  const top = await read(page);
+  await page.evaluate(() =>
+    scrollTo({ top: document.body.scrollHeight / 2, behavior: "instant" }),
+  );
+  await page.waitForTimeout(400);
+  const scrolled = await read(page);
+  expect(scrolled.spin).not.toBe(top.spin);
+  expect(scrolled.progress).not.toBe(top.progress);
+  await moving.close();
+  const still = await browser.newContext({ reducedMotion: "reduce" });
+  page = await still.newPage();
+  await page.goto("/");
+  const before = await read(page);
+  await page.evaluate(() =>
+    scrollTo({ top: document.body.scrollHeight / 2, behavior: "instant" }),
+  );
+  await page.waitForTimeout(400);
+  expect(await read(page)).toEqual(before);
+  await still.close();
 });
 
 test("animations do not cause layout shifts", async ({ page }) => {
@@ -530,7 +556,7 @@ test("home reveal is skipped with reduced motion and without JavaScript", async 
       ).toBe("none");
     }
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.locator(".car-drawing.is-hero svg")).toBeVisible();
+    await expect(page.locator(".car-drawing.is-hero .drawing-base")).toBeVisible();
     await expect(
       page.getByRole("link", { name: "View Projects" }),
     ).toBeVisible();

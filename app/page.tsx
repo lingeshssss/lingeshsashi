@@ -44,7 +44,7 @@ export default function Home() {
         </div>
         <CarDrawing
           view="threeQuarter"
-          index="01"
+          id="hero"
           hero
           className="hero-figure"
         />
@@ -134,7 +134,7 @@ export default function Home() {
         </div>
       </section>
       <section className="home-finale" aria-labelledby="finale-heading">
-        <CarDrawing view="headOn" index="02" className="finale-figure" />
+        <CarDrawing view="headOn" id="finale" className="finale-figure" />
         <div className="finale-copy" data-reveal-stagger>
           <Eyebrow>GOOD THINGS START WITH A CONVERSATION</Eyebrow>
           <h2 id="finale-heading">
