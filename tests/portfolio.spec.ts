@@ -443,7 +443,9 @@ test("car drawings are decorative and no car photos are published", async ({
     for (const svg of await page.locator(".contour-rule").all())
       await expect(svg).toHaveAttribute("aria-hidden", "true");
   }
-  await expect(page.locator("footer")).toContainText("Not affiliated with BMW");
+  await expect(page.locator("footer")).toContainText(
+    "Not affiliated with any vehicle manufacturer",
+  );
   await page.goto("/projects");
   await expect(page.locator(".project-card img")).toHaveAttribute("alt", "");
 });
@@ -556,10 +558,64 @@ test("home reveal is skipped with reduced motion and without JavaScript", async 
       ).toBe("none");
     }
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.locator(".car-drawing.is-hero .drawing-base")).toBeVisible();
+    await expect(
+      page.locator(".car-drawing.is-hero .drawing-base"),
+    ).toBeVisible();
     await expect(
       page.getByRole("link", { name: "View Projects" }),
     ).toBeVisible();
     await context.close();
+  }
+});
+
+test("multi-marque sketchbook preserves vehicle and wheel proportions", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/about");
+  await expect(page.locator(".garage-study")).toHaveCount(6);
+  for (const name of [
+    "Porsche 992 911 GT3 RS",
+    "BMW M3",
+    "McLaren 720S",
+    "Audi RS7",
+    "Audi RS5",
+    "Mercedes-Benz SL 63 AMG",
+  ]) {
+    await expect(
+      page.getByRole("heading", { name, exact: true }),
+    ).toBeVisible();
+  }
+  for (const width of [320, 768, 1440]) {
+    await page.setViewportSize({ width, height: 1000 });
+    const geometry = await page.locator(".drawing-base").evaluateAll((svgs) =>
+      svgs.map((svg) => {
+        const box = svg.getBoundingClientRect();
+        const wheels = Array.from(svg.querySelectorAll("circle.w-main")).map(
+          (w) => {
+            const b = w.getBoundingClientRect();
+            return { width: b.width, height: b.height };
+          },
+        );
+        return {
+          width: box.width,
+          height: box.height,
+          aspect: svg.getAttribute("preserveAspectRatio"),
+          wheels,
+        };
+      }),
+    );
+    for (const drawing of geometry) {
+      expect(drawing.aspect).toBe("xMidYMid meet");
+      expect(drawing.width / drawing.height).toBeCloseTo(2.5, 1);
+      expect(drawing.wheels).toHaveLength(2);
+      for (const wheel of drawing.wheels)
+        expect(Math.abs(wheel.width - wheel.height)).toBeLessThan(0.5);
+    }
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
   }
 });

@@ -84,7 +84,7 @@ export default function Contact() {
           </div>
         </div>
       </section>
-      <CarDrawing view="headOn" id="contact" className="contact-figure" />
+      <CarDrawing model="sl63" id="contact" className="contact-figure" />
     </>
   );
 }

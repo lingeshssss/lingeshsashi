@@ -40,7 +40,7 @@ export function MotionController() {
         });
     });
     mutations.observe(document.body, { childList: true, subtree: true });
-    // Pointer light on car drawings: an M-tricolor layer follows the cursor.
+    // Pointer light on car drawings: an accent-light layer follows the cursor.
     const fine = matchMedia("(hover: hover) and (pointer: fine)");
     function onMove(e: PointerEvent) {
       if (!fine.matches) return;

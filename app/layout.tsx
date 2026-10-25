@@ -1,20 +1,29 @@
 import type { Metadata } from "next";
-import { Archivo, IBM_Plex_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/ui";
 import { MotionController } from "@/components/motion";
 import "./globals.css";
 // Archivo's width axis and italic supply the condensed, forward-leaning display type;
 // IBM Plex Mono carries technical labels and numbering.
-const archivo = Archivo({
-  subsets: ["latin"],
-  axes: ["wdth"],
-  style: ["normal", "italic"],
+const archivo = localFont({
+  src: [
+    {
+      path: "../public/fonts/archivo.woff2",
+      weight: "100 900",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/archivo-italic.woff2",
+      weight: "100 900",
+      style: "italic",
+    },
+  ],
   variable: "--font-archivo",
   display: "swap",
 });
-const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
+const plexMono = localFont({
+  src: "../public/fonts/plex-mono.woff2",
   weight: "500",
   variable: "--font-plex-mono",
   display: "swap",

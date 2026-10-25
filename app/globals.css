@@ -4,10 +4,10 @@
    Tokens
    ========================================================================== */
 :root {
-  /* BMW M tricolor and the M8 Competition's carbon and Alpine-white tones. */
-  --m1: #2b9fe3;
-  --m2: #2d3b97;
-  --m3: #e3221b;
+  /* Graphite, warm drafting accents, and neutral paper tones. */
+  --m1: #d5b27c;
+  --m2: #ac8554;
+  --m3: #74593c;
   --stripe: linear-gradient(
     90deg,
     var(--m1) 0 33.4%,
@@ -27,10 +27,10 @@
   --muted: #555a60;
   --line: #d3d3cf;
   --line-strong: #9a9ea2;
-  --accent: #0a63b5;
+  --accent: #74552b;
   --accent-ink: #ffffff;
-  --signal: #c8102e;
-  --accent-soft: #dfe9f5;
+  --signal: #805521;
+  --accent-soft: #eee6d8;
   --nav: rgb(242 242 240 / 0.88);
   --grid: rgb(255 255 255 / 0.05);
   --panel: #0c0d10;
@@ -68,10 +68,10 @@
   --muted: #9fa6ad;
   --line: #23272c;
   --line-strong: #474e56;
-  --accent: #4aa3ff;
+  --accent: #d9b777;
   --accent-ink: #08090b;
-  --signal: #ff4b3e;
-  --accent-soft: #11243a;
+  --signal: #d9b777;
+  --accent-soft: #2a2319;
   --nav: rgb(8 9 11 / 0.88);
   --grid: rgb(255 255 255 / 0.05);
   --panel: #0e1013;
@@ -91,10 +91,10 @@
     --muted: #9fa6ad;
     --line: #23272c;
     --line-strong: #474e56;
-    --accent: #4aa3ff;
+    --accent: #d9b777;
     --accent-ink: #08090b;
-    --signal: #ff4b3e;
-    --accent-soft: #11243a;
+    --signal: #d9b777;
+    --accent-soft: #2a2319;
     --nav: rgb(8 9 11 / 0.88);
     --grid: rgb(255 255 255 / 0.05);
     --panel: #0e1013;
@@ -2810,5 +2810,138 @@ footer:before {
   }
   @page {
     margin: 12mm;
+  }
+}
+
+/* Automotive sketchbook: consistent proportions and responsive studies. */
+.m-stripe i:first-child {
+  background: var(--accent);
+  width: 24px;
+}
+.m-stripe i:nth-child(n + 2) {
+  display: none;
+}
+.drawing-panel {
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.025) 1px, transparent 1px);
+  background-size: 32px 32px;
+  padding: clamp(16px, 2.5vw, 36px);
+  clip-path: none;
+  border: 1px solid #2c3035;
+}
+.drawing-panel:before {
+  width: 48px;
+  background: var(--accent);
+}
+.drawing-stage {
+  width: 100%;
+  aspect-ratio: 5/2;
+  min-width: 0;
+}
+.drawing-stage svg {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.drawing-stage .w-accent {
+  stroke: #d5b27c;
+  stroke-width: 1.4;
+}
+.drawing-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px 24px;
+  flex-wrap: wrap;
+  border-top: 1px solid #30343a;
+  padding-top: 16px;
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+  color: #e8eaed;
+}
+.drawing-caption > span:last-child {
+  color: #aab0b7;
+}
+.car-drawing.is-hero .drawing-stage,
+.car-drawing:not(.is-hero) .drawing-stage {
+  animation: none;
+}
+.hero-figure {
+  margin-right: 0;
+  align-self: start;
+}
+.car-story-main {
+  margin-left: 0;
+}
+.contour-rule {
+  height: clamp(40px, 7vw, 84px);
+  width: 100%;
+}
+.garage .section-head {
+  margin-bottom: 24px;
+}
+.garage-intro {
+  max-width: 640px;
+  font-size: 17px;
+  margin-bottom: 36px;
+}
+.garage-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px 28px;
+}
+.garage-study {
+  min-width: 0;
+}
+.garage-study .drawing-panel {
+  padding: 18px 20px;
+}
+.garage-study .drawing-caption {
+  display: none;
+}
+.garage-study figcaption {
+  padding-top: 18px;
+}
+.garage-study h3 {
+  font-size: clamp(20px, 2vw, 26px);
+  margin: 9px 0 8px;
+  line-height: 1.2;
+}
+.garage-study p {
+  font-size: 13px;
+}
+.garage-note {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  margin-top: 32px;
+  max-width: 700px;
+  line-height: 1.8;
+}
+@media (max-width: 1000px) {
+  .hero-figure {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+@media (max-width: 700px) {
+  .garage-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+  }
+  .drawing-caption {
+    font-size: 9px;
+    gap: 5px 14px;
+  }
+  .drawing-caption > span {
+    max-width: 100%;
+  }
+  .hero h1 {
+    font-size: clamp(38px, 11.8vw, 70px);
+  }
+  .garage-intro {
+    font-size: 16px;
   }
 }

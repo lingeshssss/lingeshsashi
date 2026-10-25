@@ -42,12 +42,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <CarDrawing
-          view="threeQuarter"
-          id="hero"
-          hero
-          className="hero-figure"
-        />
+        <CarDrawing model="m8" id="hero" hero className="hero-figure" />
         <dl className="hero-specs">
           <div>
             <dt>Studying</dt>
@@ -134,7 +129,7 @@ export default function Home() {
         </div>
       </section>
       <section className="home-finale" aria-labelledby="finale-heading">
-        <CarDrawing view="headOn" id="finale" className="finale-figure" />
+        <CarDrawing model="gt3-rs" id="finale" className="finale-figure" />
         <div className="finale-copy" data-reveal-stagger>
           <Eyebrow>GOOD THINGS START WITH A CONVERSATION</Eyebrow>
           <h2 id="finale-heading">

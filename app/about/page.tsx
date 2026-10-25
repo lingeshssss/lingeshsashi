@@ -6,7 +6,7 @@ import {
   PageIntro,
   SectionHead,
 } from "@/components/ui";
-import { CarDrawing } from "@/components/car";
+import { CarDrawing, CarGallery } from "@/components/car";
 import {
   AlbumIndex,
   AlbumCovers,
@@ -73,11 +73,7 @@ export default function About() {
           Engineering in motion.
         </SectionHead>
         <div className="car-story-grid">
-          <CarDrawing
-            view="threeQuarter"
-            id="about"
-            className="car-story-main"
-          />
+          <CarDrawing model="m8" id="about" className="car-story-main" />
           <div className="car-story-copy" data-reveal-stagger>
             <p className="car-favorite">
               <span className="small-label">FAVORITE CAR</span>
@@ -100,6 +96,20 @@ export default function About() {
             </div>
           </div>
         </div>
+      </section>
+      <section className="section garage" aria-labelledby="garage-heading">
+        <SectionHead index="§ 02.1" label="THE SKETCHBOOK" id="garage-heading">
+          Different shapes. Same obsession.
+        </SectionHead>
+        <p className="garage-intro">
+          From the unmistakable wing of a 911 GT3 RS to the long lines of an
+          RS7, these are some of the cars that catch my eye.
+        </p>
+        <CarGallery />
+        <p className="garage-note">
+          Original, simplified side-profile studies. Illustrations are
+          interpretive, not manufacturer drawings or scale blueprints.
+        </p>
       </section>
       <section className="section music" aria-labelledby="music-heading">
         <div className="music-heading" data-reveal>

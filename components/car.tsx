@@ -1,115 +1,127 @@
 import type { CSSProperties } from "react";
-import {
-  drawings,
-  wheelSpokes,
-  type DrawingItem,
-  type Wheel,
-} from "@/lib/cars";
-type View = keyof typeof drawings;
-function Item({ item, i }: { item: DrawingItem; i: number }) {
-  const style = { "--i": i } as CSSProperties;
-  if ("ellipse" in item) {
-    const [cx, cy, rx, ry, angle] = item.ellipse;
-    return (
-      <ellipse
-        cx={cx}
-        cy={cy}
-        rx={rx}
-        ry={ry}
-        transform={`rotate(${angle} ${cx} ${cy})`}
+import { garage, type CarId, type CarProfile } from "@/lib/cars";
+function Wheel({
+  cx,
+  radius,
+  index,
+}: {
+  cx: number;
+  radius: number;
+  index: number;
+}) {
+  return (
+    <g transform={`translate(${cx} 296)`}>
+      <circle
+        r={radius}
         pathLength={1}
-        className={`w-${item.weight}`}
-        style={style}
+        className="w-main"
+        style={{ "--i": index } as CSSProperties}
       />
-    );
-  }
-  return (
-    <path
-      d={item.d}
-      pathLength={1}
-      className={`w-${item.weight}`}
-      style={style}
-    />
-  );
-}
-// Spokes live in unit-circle space inside the fitted rim ellipse, so the
-// scroll-linked spin rotates them correctly in perspective.
-function WheelFace({ wheel, i }: { wheel: Wheel; i: number }) {
-  return (
-    <g
-      transform={`translate(${wheel.cx} ${wheel.cy}) rotate(${wheel.angle}) scale(${wheel.rx} ${wheel.ry})`}
-    >
+      <circle r={radius - 8} pathLength={1} className="w-secondary" />
       <g className="wheel-spin">
-        <circle r={1} className="wheel-bounds" />
-        <path
-          d={wheelSpokes}
-          pathLength={1}
-          className="w-detail"
-          style={{ "--i": i } as CSSProperties}
-        />
-        <circle
-          r={0.2}
-          pathLength={1}
-          className="w-detail"
-          style={{ "--i": i } as CSSProperties}
-        />
+        <circle r={radius - 13} className="wheel-bounds" />
+        {Array.from({ length: 5 }, (_, i) => (
+          <path
+            key={i}
+            d={`M-4 -8 L-10 -${radius - 14} M4 -8 L10 -${radius - 14}`}
+            transform={`rotate(${i * 72})`}
+            className="w-detail"
+            pathLength={1}
+          />
+        ))}
+        <circle r={8} className="w-secondary" pathLength={1} />
       </g>
     </g>
   );
 }
-function Lines({ view }: { view: View }) {
-  const drawing = drawings[view];
+function Lines({ profile }: { profile: CarProfile }) {
+  const { front, rear } = profile;
+  const lower = ` L${front + 72} 302 A72 72 0 0 0 ${front - 72} 302 L${rear + 72} 302 A72 72 0 0 0 ${rear - 72} 302 L60 302`;
   return (
     <>
-      {drawing.items.map((item, i) => (
-        <Item key={i} item={item} i={i} />
+      <path d={profile.top + lower} pathLength={1} className="w-main" />
+      <path d={profile.glass} pathLength={1} className="w-secondary" />
+      {profile.details.map((d, i) => (
+        <path
+          key={d}
+          d={d}
+          pathLength={1}
+          className={i === 3 ? "w-accent" : "w-detail"}
+          style={{ "--i": i + 2 } as CSSProperties}
+        />
       ))}
-      {drawing.wheels.map((wheel, i) => (
-        <WheelFace key={i} wheel={wheel} i={drawing.items.length + i} />
-      ))}
+      <Wheel cx={rear} radius={profile.radius} index={12} />
+      <Wheel cx={front} radius={profile.radius} index={13} />
     </>
   );
 }
-// Decorative line drawing of the car. A second layer in the M tricolor
-// follows the pointer (wired in MotionController); scroll-linked motion and
-// the hero draw-in live in CSS and are skipped for reduced motion.
 export function CarDrawing({
-  view,
+  model = "m8",
   id,
   hero = false,
   className = "",
 }: {
-  view: View;
+  model?: CarId;
   id: string;
   hero?: boolean;
   className?: string;
 }) {
-  const drawing = drawings[view];
+  const profile = garage.find((c) => c.id === model)!;
   return (
     <div
-      className={`car-drawing is-${view}${hero ? " is-hero" : ""} ${className}`}
+      className={`car-drawing${hero ? " is-hero" : ""} ${className}`}
+      data-model={profile.id}
       data-reveal={hero ? undefined : "line"}
       aria-hidden="true"
     >
       <div className="drawing-panel">
         <div className="drawing-stage">
-          <svg className="drawing-base" viewBox={drawing.viewBox}>
-            <Lines view={view} />
+          <svg
+            className="drawing-base"
+            viewBox="0 0 1000 400"
+            preserveAspectRatio="xMidYMid meet"
+            focusable="false"
+          >
+            <Lines profile={profile} />
           </svg>
-          <svg className="drawing-glow" viewBox={drawing.viewBox}>
+          <svg
+            className="drawing-glow"
+            viewBox="0 0 1000 400"
+            preserveAspectRatio="xMidYMid meet"
+            focusable="false"
+          >
             <defs>
-              <linearGradient id={`m-${id}`} x1="0" x2="1" y1="0" y2="0">
-                <stop offset="0" style={{ stopColor: "var(--m1)" }} />
-                <stop offset="0.5" style={{ stopColor: "var(--m2)" }} />
-                <stop offset="1" style={{ stopColor: "var(--m3)" }} />
+              <linearGradient id={`car-${id}`}>
+                <stop stopColor="var(--accent)" />
+                <stop offset="1" stopColor="var(--signal)" />
               </linearGradient>
             </defs>
-            <g stroke={`url(#m-${id})`}>
-              <Lines view={view} />
+            <g stroke={`url(#car-${id})`}>
+              <Lines profile={profile} />
             </g>
           </svg>
         </div>
+        <div className="drawing-caption">
+          <span>{profile.name}</span>
+          <span>{profile.type}</span>
+        </div>
       </div>
+    </div>
+  );
+}
+export function CarGallery() {
+  return (
+    <div className="garage-grid">
+      {garage.slice(1).map((profile) => (
+        <figure key={profile.id} className="garage-study">
+          <CarDrawing model={profile.id} id={`garage-${profile.id}`} />
+          <figcaption>
+            <span className="small-label">STUDY {profile.mark}</span>
+            <h3>{profile.name}</h3>
+            <p>{profile.type}</p>
+          </figcaption>
+        </figure>
+      ))}
     </div>
   );
 }

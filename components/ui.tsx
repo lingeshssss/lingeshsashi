@@ -31,7 +31,7 @@ export function Eyebrow({ children }: { children: React.ReactNode }) {
     </p>
   );
 }
-// The roofline traced from the reference photo, drawn as a section rule.
+// A proportion-preserving profile used as a quiet section rule.
 export function ContourRule({ intro = false }: { intro?: boolean }) {
   return (
     <svg
@@ -40,7 +40,7 @@ export function ContourRule({ intro = false }: { intro?: boolean }) {
       aria-hidden="true"
       focusable="false"
       viewBox={roofline.viewBox}
-      preserveAspectRatio="none"
+      preserveAspectRatio="xMidYMid meet"
     >
       <path d={roofline.path} pathLength={1} />
     </svg>
@@ -230,7 +230,10 @@ export function Footer() {
       </div>
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Lingesh Sashi Kumar</span>
-        <span>Independent personal site. Not affiliated with BMW.</span>
+        <span>
+          Independent personal site. Not affiliated with any vehicle
+          manufacturer.
+        </span>
       </div>
     </footer>
   );
