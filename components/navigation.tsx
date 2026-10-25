@@ -64,7 +64,12 @@ export function Navigation() {
           className="wordmark"
           aria-label="Lingesh Sashi Kumar home"
         >
-          LSK<span>.</span>
+          LSK
+          <span className="m-stripe" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
         </Link>
         <button
           className="menu-toggle"
@@ -102,6 +107,7 @@ export function Navigation() {
           <span aria-hidden="true">{dark ? "☀" : "◐"}</span>
         </button>
       </div>
+      <span className="scroll-progress" aria-hidden="true" />
     </header>
   );
 }

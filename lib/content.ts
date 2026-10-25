@@ -393,32 +393,6 @@ export const interests = [
     link: null as { href: string; label: string } | null,
   },
 ];
-// Why the M8 Competition Gran Coupe shapes this site. Design rationale only:
-// no ownership, driving experiences, model year, or specifications are claimed.
-export const carInterest = {
-  paragraphs: [
-    "My favorite car is the BMW M8 Competition Gran Coupe, so I used it as the reference for this portfolio’s design.",
-    "Its long, low four-door shape sets the wide, horizontal layouts. Its roofline and body lines, traced from reference photos, became the line drawings and contour rules throughout the site. The red controls in its cockpit set the accent color, and its instrument cluster inspired the monospaced labels.",
-  ],
-  mapping: [
-    [
-      "Silhouette",
-      "Long, low four-door profile",
-      "Wide layouts and long horizontal rules",
-    ],
-    [
-      "Body lines",
-      "Sculpted roofline and creases",
-      "Contour rules and line-drawing reveals",
-    ],
-    [
-      "Lighting",
-      "Headlight signature and red cockpit controls",
-      "One red accent, used on headlights and key details",
-    ],
-    ["Instruments", "Cluster typography", "Monospaced labels and numbering"],
-  ],
-};
 // Editorial checklist: do not present these missing details as public claims.
 export const missingContent = {
   credentials:

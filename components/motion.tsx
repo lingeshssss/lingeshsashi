@@ -40,9 +40,29 @@ export function MotionController() {
         });
     });
     mutations.observe(document.body, { childList: true, subtree: true });
+    // Pointer light on car drawings: an M-tricolor layer follows the cursor.
+    const fine = matchMedia("(hover: hover) and (pointer: fine)");
+    function onMove(e: PointerEvent) {
+      if (!fine.matches) return;
+      const el = (e.target as Element | null)?.closest?.<HTMLElement>(
+        ".car-drawing",
+      );
+      document
+        .querySelectorAll<HTMLElement>(".car-drawing[data-lit]")
+        .forEach((lit) => {
+          if (lit !== el) delete lit.dataset.lit;
+        });
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      el.style.setProperty("--mx", `${e.clientX - r.left}px`);
+      el.style.setProperty("--my", `${e.clientY - r.top}px`);
+      el.dataset.lit = "";
+    }
+    document.addEventListener("pointermove", onMove, { passive: true });
     return () => {
       intersection.disconnect();
       mutations.disconnect();
+      document.removeEventListener("pointermove", onMove);
     };
   }, []);
   return null;

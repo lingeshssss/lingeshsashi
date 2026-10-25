@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { projects, profile } from "@/lib/content";
-import { car, roofline } from "@/lib/cars";
+import { roofline } from "@/lib/cars";
 type Project = (typeof projects)[number];
 export function Arrow() {
   return (
@@ -22,7 +22,11 @@ export function Arrow() {
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <p className="eyebrow">
-      <span />
+      <span className="m-stripe" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+      </span>
       {children}
     </p>
   );
@@ -198,7 +202,12 @@ export function Footer() {
     <footer>
       <div className="footer-top">
         <Link href="/" className="wordmark">
-          LSK<span>.</span>
+          LSK
+          <span className="m-stripe" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
         </Link>
         <p>Curiosity. Craft. Forward motion.</p>
         <div>
@@ -221,10 +230,7 @@ export function Footer() {
       </div>
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Lingesh Sashi Kumar</span>
-        <span>
-          Design inspired by the {car.name}. Independent personal site; not
-          affiliated with BMW.
-        </span>
+        <span>Independent personal site. Not affiliated with BMW.</span>
       </div>
     </footer>
   );

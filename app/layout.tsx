@@ -4,11 +4,12 @@ import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/ui";
 import { MotionController } from "@/components/motion";
 import "./globals.css";
-// Archivo's width axis supplies the condensed, instrument-like display type;
+// Archivo's width axis and italic supply the condensed, forward-leaning display type;
 // IBM Plex Mono carries technical labels and numbering.
 const archivo = Archivo({
   subsets: ["latin"],
   axes: ["wdth"],
+  style: ["normal", "italic"],
   variable: "--font-archivo",
   display: "swap",
 });
