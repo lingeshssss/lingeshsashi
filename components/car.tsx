@@ -1,75 +1,72 @@
-import Image from "next/image";
 import type { CSSProperties } from "react";
-import { carPhotos, heroContour } from "@/lib/cars";
-type Photo = (typeof carPhotos)[keyof typeof carPhotos];
-// Homepage reveal: contour lines traced from this photo draw in, a shutter
-// slides away to uncover the car, then the lines fade. CSS-only, runs once,
-// and the photo is fully visible without animation or JavaScript.
-export function HeroFigure() {
-  const photo = carPhotos.frontThreeQuarter;
+import { car, drawings } from "@/lib/cars";
+type View = keyof typeof drawings;
+// Callout markers for the annotated About drawing, in the drawing's own
+// coordinate space; numbers match the rows of the design-mapping table.
+const callouts = [
+  { n: "01", x: 600, y: 262, label: "Silhouette" },
+  { n: "02", x: 600, y: 622, label: "Body lines" },
+  { n: "03", x: 1085, y: 512, label: "Lighting" },
+];
+// Original line drawings traced from the owner's reference photos. The hero
+// variant draws itself once on load (CSS only); others draw as they scroll
+// into view. Lines rest fully drawn, so nothing depends on the animation.
+export function CarDrawing({
+  view,
+  index,
+  hero = false,
+  annotate = false,
+  className = "",
+}: {
+  view: View;
+  index: string;
+  hero?: boolean;
+  annotate?: boolean;
+  className?: string;
+}) {
+  const drawing = drawings[view];
   return (
-    <figure className="hero-figure">
-      <div className="hero-frame">
-        <Image
-          src={photo.src}
-          alt={photo.alt}
-          sizes="(max-width: 700px) 100vw, 62vw"
-          loading="eager"
-          fetchPriority="high"
-          placeholder="blur"
-        />
-        <span className="hero-shutter" aria-hidden="true" />
+    <figure
+      className={`car-drawing is-${view}${hero ? " is-hero" : ""} ${className}`}
+      data-reveal={hero ? undefined : "line"}
+    >
+      <div className="drawing-panel">
         <svg
-          className="hero-contour"
-          aria-hidden="true"
-          focusable="false"
-          viewBox={`0 0 ${heroContour.width} ${heroContour.height}`}
+          viewBox={drawing.viewBox}
+          role="img"
+          aria-label={`Line drawing of the ${car.name}, ${drawing.label.toLowerCase()} view${annotate ? ", with numbered callouts for the silhouette, body lines, and headlights" : ""}`}
         >
-          {heroContour.paths.map((d, i) => (
+          {drawing.paths.map((path, i) => (
             <path
-              key={d}
-              d={d}
+              key={path.d}
+              d={path.d}
               pathLength={1}
+              className={
+                path.accent
+                  ? "accent-line"
+                  : path.detail
+                    ? "detail-line"
+                    : undefined
+              }
               style={{ "--i": i } as CSSProperties}
             />
           ))}
+          {annotate &&
+            callouts.map((c) => (
+              <g key={c.n} className="callout">
+                <circle cx={c.x} cy={c.y} r={22} />
+                <text x={c.x} y={c.y} dy="0.36em" textAnchor="middle">
+                  {c.n}
+                </text>
+              </g>
+            ))}
         </svg>
       </div>
       <figcaption>
-        <span>FIG. 01</span>
-        <span>{photo.label} — the reference car for this portfolio</span>
-      </figcaption>
-    </figure>
-  );
-}
-export function CarFigure({
-  photo,
-  index,
-  sizes,
-  className = "",
-  caption,
-  decorative = false,
-}: {
-  photo: Photo;
-  index: string;
-  sizes: string;
-  className?: string;
-  caption?: React.ReactNode;
-  decorative?: boolean;
-}) {
-  return (
-    <figure className={`car-figure ${className}`} data-reveal="mask">
-      <div className="car-frame">
-        <Image
-          src={photo.src}
-          alt={decorative ? "" : photo.alt}
-          sizes={sizes}
-          placeholder="blur"
-        />
-      </div>
-      <figcaption>
         <span>FIG. {index}</span>
-        <span>{caption ?? photo.label}</span>
+        <span>
+          {drawing.label} — line drawing traced from a reference photo
+        </span>
       </figcaption>
     </figure>
   );

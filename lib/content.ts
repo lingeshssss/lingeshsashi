@@ -398,23 +398,23 @@ export const interests = [
 export const carInterest = {
   paragraphs: [
     "My favorite car is the BMW M8 Competition Gran Coupe, so I used it as the reference for this portfolio’s design.",
-    "Its long, low four-door shape sets the wide, horizontal layouts. The roofline traced from a reference photo became the contour rules between sections. The red accents in its cockpit and lighting set the accent color, and its instrument cluster inspired the monospaced labels.",
+    "Its long, low four-door shape sets the wide, horizontal layouts. Its roofline and body lines, traced from reference photos, became the line drawings and contour rules throughout the site. The red controls in its cockpit set the accent color, and its instrument cluster inspired the monospaced labels.",
   ],
   mapping: [
     [
       "Silhouette",
       "Long, low four-door profile",
-      "Wide layouts and long rules",
+      "Wide layouts and long horizontal rules",
     ],
     [
       "Body lines",
-      "Traced roofline and contours",
-      "Section rules and line reveals",
+      "Sculpted roofline and creases",
+      "Contour rules and line-drawing reveals",
     ],
     [
-      "Cockpit",
-      "Red controls against dark trim",
-      "One red accent on neutral tones",
+      "Lighting",
+      "Headlight signature and red cockpit controls",
+      "One red accent, used on headlights and key details",
     ],
     ["Instruments", "Cluster typography", "Monospaced labels and numbering"],
   ],

@@ -6,8 +6,7 @@ import {
   PageIntro,
   SectionHead,
 } from "@/components/ui";
-import { CarFigure } from "@/components/car";
-import { carPhotos } from "@/lib/cars";
+import { CarDrawing } from "@/components/car";
 import {
   AlbumIndex,
   AlbumCovers,
@@ -80,10 +79,10 @@ export default function About() {
           Engineering in motion.
         </SectionHead>
         <div className="car-story-grid">
-          <CarFigure
-            photo={carPhotos.frontLow}
+          <CarDrawing
+            view="threeQuarter"
             index="03"
-            sizes="(max-width: 700px) 100vw, 58vw"
+            annotate
             className="car-story-main"
           />
           <div className="car-story-copy" data-reveal-stagger>
@@ -106,16 +105,6 @@ export default function About() {
           </div>
         </div>
         <div className="car-details">
-          <CarFigure
-            photo={carPhotos.cockpit}
-            index="04"
-            sizes="(max-width: 700px) 100vw, 33vw"
-          />
-          <CarFigure
-            photo={carPhotos.cluster}
-            index="05"
-            sizes="(max-width: 700px) 100vw, 33vw"
-          />
           <table className="design-map" data-reveal>
             <caption>From the car to this site</caption>
             <thead>
@@ -126,9 +115,14 @@ export default function About() {
               </tr>
             </thead>
             <tbody>
-              {carInterest.mapping.map(([ref, onCar, onSite]) => (
+              {carInterest.mapping.map(([ref, onCar, onSite], i) => (
                 <tr key={ref}>
-                  <th scope="row">{ref}</th>
+                  <th scope="row">
+                    <span className="map-index">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>{" "}
+                    {ref}
+                  </th>
                   <td>{onCar}</td>
                   <td>{onSite}</td>
                 </tr>

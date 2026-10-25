@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Arrow, Eyebrow, PageIntro } from "@/components/ui";
-import { CarFigure } from "@/components/car";
+import { CarDrawing } from "@/components/car";
 import { profile } from "@/lib/content";
-import { carPhotos } from "@/lib/cars";
 export const metadata: Metadata = {
   description:
     "Connect with Lingesh Sashi Kumar for internships, freelance websites, and collaboration.",
@@ -85,13 +84,7 @@ export default function Contact() {
           </div>
         </div>
       </section>
-      <CarFigure
-        photo={carPhotos.rearThreeQuarter}
-        index="06"
-        sizes="(max-width: 700px) 100vw, 1150px"
-        className="contact-figure"
-        caption={`${carPhotos.rearThreeQuarter.label} — ${carPhotos.rearThreeQuarter.credit}`}
-      />
+      <CarDrawing view="headOn" index="04" className="contact-figure" />
     </>
   );
 }
