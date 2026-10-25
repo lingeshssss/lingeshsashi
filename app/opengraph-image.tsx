@@ -7,8 +7,8 @@ export default function Image() {
   return new ImageResponse(
     <div
       style={{
-        background: "#f4f3ee",
-        color: "#202423",
+        background: "#0b0c0e",
+        color: "#ecebe6",
         width: "100%",
         height: "100%",
         display: "flex",
@@ -17,7 +17,7 @@ export default function Image() {
         fontFamily: "sans-serif",
       }}
     >
-      <div style={{ fontSize: 26, color: "#244fe0", display: "flex" }}>
+      <div style={{ fontSize: 26, color: "#ff5a4a", display: "flex" }}>
         LINGESH SASHI KUMAR / RUTGERS
       </div>
       <div
@@ -36,7 +36,7 @@ export default function Image() {
           fontSize: 80,
           letterSpacing: -4,
           lineHeight: 1.05,
-          color: "#777c79",
+          color: "#a3a8ac",
           display: "flex",
         }}
       >

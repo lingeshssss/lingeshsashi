@@ -82,6 +82,9 @@ export const projects = [
     repository: null as string | null,
     demo: "https://www.campusos.dev" as string | null,
     screenshot: "/campusos-sign-in.webp" as string | null,
+    screenshotAlt:
+      "CampusOS public sign-in page, with a green introductory panel and email and Google sign-in options" as
+        string | null,
   },
   {
     slug: "marketpilot-ai",
@@ -112,6 +115,7 @@ export const projects = [
     repository: null as string | null,
     demo: null as string | null,
     screenshot: null as string | null,
+    screenshotAlt: null as string | null,
   },
 ];
 export const experience = [
@@ -377,12 +381,44 @@ export const interests = [
     link: { href: profile.youtube, label: "@2fast-m3" },
   },
   {
+    label: "TECHNOLOGY",
+    title: "How things work.",
+    body: "I like understanding how things work. AI, cloud computing, and cybersecurity are the areas I keep exploring through my internships, Microsoft certifications, and projects.",
+    link: null as { href: string; label: string } | null,
+  },
+  {
     label: "ENTREPRENEURSHIP",
     title: "Ideas into action.",
     body: "Through my web-design business, I build websites for clients. I enjoy the whole process: understanding what someone needs, making something useful, and finding the people it can help.",
     link: null as { href: string; label: string } | null,
   },
 ];
+// Why the M8 Competition Gran Coupe shapes this site. Design rationale only:
+// no ownership, driving experiences, model year, or specifications are claimed.
+export const carInterest = {
+  paragraphs: [
+    "My favorite car is the BMW M8 Competition Gran Coupe, so I used it as the reference for this portfolio’s design.",
+    "Its long, low four-door shape sets the wide, horizontal layouts. The roofline traced from a reference photo became the contour rules between sections. The red accents in its cockpit and lighting set the accent color, and its instrument cluster inspired the monospaced labels.",
+  ],
+  mapping: [
+    [
+      "Silhouette",
+      "Long, low four-door profile",
+      "Wide layouts and long rules",
+    ],
+    [
+      "Body lines",
+      "Traced roofline and contours",
+      "Section rules and line reveals",
+    ],
+    [
+      "Cockpit",
+      "Red controls against dark trim",
+      "One red accent on neutral tones",
+    ],
+    ["Instruments", "Cluster typography", "Monospaced labels and numbering"],
+  ],
+};
 // Editorial checklist: do not present these missing details as public claims.
 export const missingContent = {
   credentials:

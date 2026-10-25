@@ -346,14 +346,15 @@ test("scroll reveals show content on scroll and on keyboard focus", async ({
     .locator(".connect .button")
     .evaluate((el: HTMLElement) => el.focus({ preventScroll: true }));
   await expect(connect).not.toHaveAttribute("data-revealed");
-  await expect(connect).toHaveCSS("opacity", "1");
+  // The band's children are staggered; focus-within must reveal them.
+  await expect(connect.locator(".actions")).toHaveCSS("opacity", "1");
   const covers = page.locator(".album-covers");
   await covers.scrollIntoViewIfNeeded();
   await expect(covers).toHaveAttribute("data-revealed", "");
   await expect(covers.locator("li").last()).toHaveCSS("opacity", "1");
   const height = await page.evaluate(() => document.body.scrollHeight);
   for (let y = 0; y < height; y += 500) {
-    await page.evaluate((y) => scrollTo(0, y), y);
+    await page.evaluate((y) => scrollTo({ top: y, behavior: "instant" }), y);
     await page.waitForTimeout(50);
   }
   await expect(
@@ -392,4 +393,141 @@ test("content and navigation remain available without JavaScript", async ({
     nav.getByRole("link", { name: "Contact", exact: true }),
   ).toHaveCSS("opacity", "1");
   await context.close();
+});
+
+test("home hero shows identity and actions in the first viewport", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const viewport = page.viewportSize()!;
+  for (const locator of [
+    page.locator(".hero-name"),
+    page.getByRole("heading", {
+      level: 1,
+      name: "Building useful software. Exploring what’s next.",
+    }),
+    page.getByRole("link", { name: "View Projects" }),
+    page.getByRole("link", { name: "View Résumé" }),
+  ]) {
+    await expect(locator).toBeVisible();
+    const box = (await locator.boundingBox())!;
+    expect(box.y + box.height).toBeLessThanOrEqual(viewport.height);
+  }
+  await expect(page.locator(".hero-name")).toHaveText(/Lingesh\s+Sashi Kumar/);
+  await expect(page.locator(".hero-description")).toContainText(
+    "Rutgers University–New Brunswick",
+  );
+  // Once the reveal finishes, the shutter is gone and contour lines faded.
+  await page.waitForTimeout(2600);
+  const frame = (await page.locator(".hero-frame").boundingBox())!;
+  const shutter = (await page.locator(".hero-shutter").boundingBox())!;
+  expect(shutter.x).toBeGreaterThanOrEqual(frame.x + frame.width - 1);
+  for (const opacity of await page
+    .locator(".hero-contour path")
+    .evaluateAll((paths) => paths.map((p) => getComputedStyle(p).opacity)))
+    expect(opacity).toBe("0");
+});
+
+test("car imagery has alt text, reserved space, and a credit", async ({
+  page,
+}) => {
+  for (const route of ["/", "/about", "/contact"]) {
+    await page.goto(route);
+    const figures = page.locator(".hero-figure img, .car-figure img");
+    expect(await figures.count(), route).toBeGreaterThan(0);
+    for (const img of await figures.all()) {
+      await expect(img).toHaveAttribute("alt", /M8/);
+      await expect(img).toHaveAttribute("width", /\d+/);
+      await expect(img).toHaveAttribute("height", /\d+/);
+    }
+    // Decorative contour graphics stay out of the accessibility tree.
+    for (const svg of await page.locator(".contour-rule, .hero-contour").all())
+      await expect(svg).toHaveAttribute("aria-hidden", "true");
+  }
+  await expect(page.locator(".contact-figure figcaption")).toContainText(
+    "Exotic Car Trader",
+  );
+  await expect(page.locator("footer")).toContainText("not affiliated with BMW");
+  // Card screenshots are decorative inside links; the link text names them.
+  await page.goto("/projects");
+  await expect(page.locator(".project-card img")).toHaveAttribute("alt", "");
+});
+
+test("animations do not cause layout shifts", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  for (const route of ["/", "/about", "/projects"]) {
+    await page.goto(route);
+    await page.evaluate(() => {
+      (window as unknown as { cls: number }).cls = 0;
+      new PerformanceObserver((list) => {
+        for (const entry of list.getEntries() as unknown as {
+          value: number;
+          hadRecentInput: boolean;
+        }[])
+          if (!entry.hadRecentInput)
+            (window as unknown as { cls: number }).cls += entry.value;
+      }).observe({ type: "layout-shift", buffered: true });
+    });
+    const height = await page.evaluate(() => document.body.scrollHeight);
+    for (let y = 0; y < height; y += 600) {
+      await page.evaluate((y) => scrollTo({ top: y, behavior: "instant" }), y);
+      await page.waitForTimeout(80);
+    }
+    await page.waitForTimeout(1500);
+    const cls = await page.evaluate(
+      () => (window as unknown as { cls: number }).cls,
+    );
+    expect(cls, route).toBeLessThan(0.05);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+      route,
+    ).toBe(true);
+  }
+});
+
+test("project filter transition settles with visible cards", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/projects");
+  await page.getByRole("button", { name: "AI applications" }).click();
+  await expect(page.locator(".project-card")).toHaveCount(1);
+  await expect(page.locator(".project-card")).toHaveCSS("opacity", "1");
+  await page.getByRole("button", { name: "All" }).click();
+  await expect(page.locator(".project-card")).toHaveCount(2);
+  for (const card of await page.locator(".project-card").all())
+    await expect(card).toHaveCSS("opacity", "1");
+});
+
+test("home reveal is skipped with reduced motion and without JavaScript", async ({
+  browser,
+}) => {
+  for (const options of [
+    { reducedMotion: "reduce" as const },
+    { javaScriptEnabled: false },
+  ]) {
+    const context = await browser.newContext(options);
+    const page = await context.newPage();
+    await page.goto("/");
+    if ("reducedMotion" in options) {
+      // Content and image are in their resting state immediately.
+      expect(
+        await page
+          .locator(".mask-line > span")
+          .first()
+          .evaluate((el) => getComputedStyle(el).animationName),
+      ).toBe("none");
+      const frame = (await page.locator(".hero-frame").boundingBox())!;
+      const shutter = (await page.locator(".hero-shutter").boundingBox())!;
+      expect(shutter.x).toBeGreaterThanOrEqual(frame.x + frame.width - 1);
+    }
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(page.locator(".hero-figure img")).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "View Projects" }),
+    ).toBeVisible();
+    await context.close();
+  }
 });

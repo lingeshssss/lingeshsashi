@@ -1,167 +1,161 @@
 import Link from "next/link";
-import { Arrow, Connect, Eyebrow, ProjectCard } from "@/components/ui";
-import { profile } from "@/lib/content";
-function EngineeringVisual() {
-  return (
-    <div
-      className="engineering"
-      role="img"
-      aria-label="Abstract engineering dial expressing curiosity and forward motion"
-    >
-      <div className="drawing-grid" />
-      <span className="drawing-label top">FIG. 01 — ALWAYS EXPLORING</span>
-      <div className="dial">
-        <div className="dial-ring" />
-        <div className="dial-inner" />
-        <div className="dial-cross horizontal" />
-        <div className="dial-cross vertical" />
-        <div className="dial-orbit" />
-        <div className="dial-center">
-          lsk
-          <span>
-            <Arrow />
-          </span>
-        </div>
-        <span className="dial-track">
-          <span className="dial-point" />
-        </span>
-      </div>
-      <div className="drawing-bottom">
-        <span>
-          40.5008° N<br />
-          74.4474° W
-        </span>
-        <span>IDEAS → IMPACT</span>
-      </div>
-    </div>
-  );
-}
+import {
+  Arrow,
+  ContourRule,
+  Eyebrow,
+  ProjectCard,
+  SectionHead,
+} from "@/components/ui";
+import { CarFigure, HeroFigure } from "@/components/car";
+import { experience, profile, projects } from "@/lib/content";
+import { carPhotos } from "@/lib/cars";
 export default function Home() {
+  const work = experience.filter((e) => e.section === "work" && e.dates);
   return (
     <>
-      <section className="hero">
+      <section className="hero" aria-labelledby="hero-heading">
         <div className="hero-copy">
-          <Eyebrow>STUDENT. DEVELOPER. ALWAYS CURIOUS.</Eyebrow>
-          <p className="hero-name">Hi, I’m Lingesh Sashi Kumar.</p>
-          <h1>
-            Building useful
-            <br />
-            software.
-            <br />
-            <span className="muted">
-              Exploring
-              <br />
-              what’s next.
+          <p className="hero-name">
+            <span>Lingesh</span> <span>Sashi Kumar</span>
+          </p>
+          <h1 id="hero-heading">
+            <span className="mask-line">
+              <span>Building useful software.</span>
+            </span>{" "}
+            <span className="mask-line">
+              <span className="muted">Exploring what’s next.</span>
             </span>
           </h1>
-          <p className="hero-description">
-            A Rutgers student bringing curiosity to software, AI, and
-            entrepreneurship. I like turning practical problems into thoughtful
-            digital experiences.
-          </p>
-          <div className="actions">
-            <Link href="/projects" className="button primary">
-              View Projects <Arrow />
-            </Link>
-            <Link href="/resume" className="button secondary">
-              View Résumé <span aria-hidden="true">→</span>
-            </Link>
-          </div>
-        </div>
-        <EngineeringVisual />
-      </section>
-      <div className="identity-strip">
-        <span>
-          <span className="status-dot" /> Rutgers University–New Brunswick
-        </span>
-        <span>CLASS OF 2030</span>
-        <span>SOFTWARE · AI · CLOUD · SECURITY</span>
-      </div>
-      <section className="section">
-        <div className="section-heading" data-reveal>
-          <div>
-            <Eyebrow>01 / SELECTED EXPLORATIONS</Eyebrow>
-            <h2>Ideas with a purpose.</h2>
-          </div>
-          <Link className="text-link" href="/projects">
-            Explore projects <Arrow />
-          </Link>
-        </div>
-        <div className="featured-grid" data-reveal-stagger>
-          <ProjectCard />
-          <aside className="project-aside">
-            <svg
-              className="large-asterisk"
-              aria-hidden="true"
-              width="58"
-              height="58"
-              viewBox="0 0 64 64"
-              stroke="currentColor"
-              strokeWidth="3"
-            >
-              <path d="M32 3v58M3 32h58M11 11l42 42M11 53l42-42" />
-            </svg>
-            <h3>
-              Practical problems.
-              <br />
-              New possibilities.
-            </h3>
-            <p>
-              My interests sit where useful software meets everyday life. From
-              student tools to client websites, I’m drawn to things people can
-              actually use.
+          <div className="hero-lede">
+            <p className="hero-description">
+              I’m a Computer Science and Data Science student at{" "}
+              {profile.university}, interested in software engineering, AI,
+              cloud computing, and cybersecurity. This portfolio is about the
+              software I build and the interests that shape me.
             </p>
-            <Link href="/about" className="text-link">
-              A little more about me <Arrow />
-            </Link>
-          </aside>
+            <div className="actions">
+              <Link href="/projects" className="button primary">
+                View Projects <Arrow />
+              </Link>
+              <Link href="/resume" className="button secondary">
+                View Résumé <Arrow />
+              </Link>
+            </div>
+          </div>
         </div>
+        <HeroFigure />
+        <dl className="hero-specs">
+          <div>
+            <dt>Studying</dt>
+            <dd>{profile.university}</dd>
+          </div>
+          <div>
+            <dt>Degree</dt>
+            <dd>B.S. CS&DS · Expected {profile.graduation}</dd>
+          </div>
+          <div>
+            <dt>Focus</dt>
+            <dd>Software · AI · Cloud · Security</dd>
+          </div>
+          <div>
+            <dt>Internships</dt>
+            <dd>NJCCIC · Codestax</dd>
+          </div>
+        </dl>
       </section>
-      <section className="section approach">
-        <div data-reveal>
-          <Eyebrow>02 / HOW I THINK</Eyebrow>
-          <h2>
-            Curious by nature.
-            <br />
-            <span className="muted">Hands-on by choice.</span>
-          </h2>
-          <Link href="/experience" className="text-link">
-            My experience <Arrow />
+      <section className="section home-work" aria-labelledby="work-heading">
+        <div className="section-top">
+          <SectionHead index="§ 01" label="SELECTED WORK" id="work-heading">
+            Ideas with a purpose.
+          </SectionHead>
+          <Link className="text-link" href="/projects">
+            All projects <Arrow />
           </Link>
         </div>
-        <div className="strength-list" data-reveal-stagger>
-          {[
-            [
-              "01",
-              "Build with purpose",
-              "Experience creating client websites and exploring practical tools for student life.",
-            ],
-            [
-              "02",
-              "Keep learning",
-              "Interests spanning AI, cloud computing, and cybersecurity, with internship experience at NJCCIC.",
-            ],
-            [
-              "03",
-              "Share what you know",
-              "Helping teach generative AI workshops and bringing people together through engineering.",
-            ],
-          ].map(([n, t, d]) => (
-            <div key={n}>
-              <span>{n}</span>
-              <div>
-                <h3>{t}</h3>
-                <p>{d}</p>
-              </div>
-            </div>
+        <div className="project-rows" data-reveal-stagger>
+          {projects.map((project, i) => (
+            <ProjectCard
+              key={project.slug}
+              project={project}
+              index={i}
+              variant="row"
+            />
           ))}
         </div>
       </section>
-      <div className="tool-strip" data-reveal>
-        <span>A GROWING TOOLKIT</span>
-        <p>{profile.skills.join("   /   ")}</p>
-      </div>
-      <Connect />
+      <section
+        className="section home-overview"
+        aria-labelledby="overview-heading"
+      >
+        <SectionHead
+          index="§ 02"
+          label="EXPERIENCE & TOOLKIT"
+          id="overview-heading"
+        >
+          Curious by nature. <span className="muted">Hands-on by choice.</span>
+        </SectionHead>
+        <div className="overview-grid">
+          <div>
+            <h3 className="column-label">Experience</h3>
+            <ol className="spec-list" data-reveal-stagger>
+              {work.map((e) => (
+                <li key={e.organization}>
+                  <span className="spec-key">{e.dates}</span>
+                  <span className="spec-value">
+                    <strong>{e.title}</strong>
+                    <span>{e.organization}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+            <Link href="/experience" className="text-link">
+              Full experience <Arrow />
+            </Link>
+          </div>
+          <div>
+            <h3 className="column-label">Technical skills</h3>
+            <dl className="skill-groups" data-reveal-stagger>
+              {profile.skillGroups.map((group) => (
+                <div key={group.title}>
+                  <dt>{group.title}</dt>
+                  <dd>
+                    {group.items.map((item) => (
+                      <span key={item}>{item}</span>
+                    ))}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </section>
+      <section className="home-finale" aria-labelledby="finale-heading">
+        <CarFigure
+          photo={carPhotos.headOn}
+          index="02"
+          sizes="(max-width: 700px) 100vw, 55vw"
+          className="finale-figure"
+        />
+        <div className="finale-copy" data-reveal-stagger>
+          <Eyebrow>GOOD THINGS START WITH A CONVERSATION</Eyebrow>
+          <h2 id="finale-heading">
+            Let’s build something <span className="muted">worth making.</span>
+          </h2>
+          <p>
+            I’m open to software engineering internships, freelance website
+            work, and thoughtful collaborations.
+          </p>
+          <div className="actions">
+            <Link className="button primary" href="/contact">
+              Get in touch <Arrow />
+            </Link>
+            <a className="text-link" href={`mailto:${profile.email}`}>
+              {profile.email} <Arrow />
+            </a>
+          </div>
+        </div>
+        <ContourRule />
+      </section>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

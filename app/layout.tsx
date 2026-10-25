@@ -1,8 +1,23 @@
 import type { Metadata } from "next";
+import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/ui";
 import { MotionController } from "@/components/motion";
 import "./globals.css";
+// Archivo's width axis supplies the condensed, instrument-like display type;
+// IBM Plex Mono carries technical labels and numbering.
+const archivo = Archivo({
+  subsets: ["latin"],
+  axes: ["wdth"],
+  variable: "--font-archivo",
+  display: "swap",
+});
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: "500",
+  variable: "--font-plex-mono",
+  display: "swap",
+});
 const siteUrl = process.env.SITE_URL;
 export const metadata: Metadata = {
   ...(siteUrl
@@ -31,7 +46,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${archivo.variable} ${plexMono.variable}`}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script dangerouslySetInnerHTML={{ __html: motionScript }} />

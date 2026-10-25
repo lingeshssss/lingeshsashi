@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Eyebrow } from "@/components/ui";
+import { ContourRule, Eyebrow } from "@/components/ui";
 export default function NotFound() {
   return (
     <section className="not-found">
@@ -13,6 +13,7 @@ export default function NotFound() {
       <Link href="/" className="button primary">
         Back to home →
       </Link>
+      <ContourRule intro />
     </section>
   );
 }
