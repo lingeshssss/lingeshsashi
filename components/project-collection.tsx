@@ -34,9 +34,15 @@ export function ProjectCollection() {
       <p className="sr-only" aria-live="polite">
         {shown.length} {shown.length === 1 ? "project" : "projects"} shown
       </p>
-      <div className="project-collection" data-reveal-stagger>
+      {/* Keyed by filter so each change remounts the grid and replays the
+          staggered reveal, giving a brief, consistent filter transition. */}
+      <div className="project-collection" data-reveal-stagger key={filter}>
         {shown.map((project) => (
-          <ProjectCard key={project.slug} project={project} />
+          <ProjectCard
+            key={project.slug}
+            project={project}
+            index={projects.indexOf(project)}
+          />
         ))}
       </div>
     </>

@@ -1,12 +1,26 @@
 import type { Metadata } from "next";
-import { Connect, PageIntro, Eyebrow, Arrow } from "@/components/ui";
+import {
+  Arrow,
+  Connect,
+  Eyebrow,
+  PageIntro,
+  SectionHead,
+} from "@/components/ui";
+import { CarFigure } from "@/components/car";
+import { carPhotos } from "@/lib/cars";
 import {
   AlbumIndex,
   AlbumCovers,
   StepSequencer,
   Waveform,
 } from "@/components/music";
-import { biography, interests, music } from "@/lib/content";
+import {
+  biography,
+  carInterest,
+  interests,
+  music,
+  profile,
+} from "@/lib/content";
 export const metadata: Metadata = {
   description:
     "Meet Lingesh Sashi Kumar, a Rutgers student interested in software, AI, cybersecurity, music production, cars, and entrepreneurship.",
@@ -24,16 +38,30 @@ export default function About() {
         </p>
       </PageIntro>
       <section className="story-grid section">
-        <div className="type-portrait" data-reveal>
-          <span>THE PERSON BEHIND THE PIXELS</span>
-          <div>
-            Learn.
-            <br />
-            Make.
-            <br />
-            <em>Repeat.</em>
-          </div>
-          <span>LINGESH SASHI KUMAR / RUTGERS</span>
+        <div className="nameplate" data-reveal>
+          <span className="nameplate-mark" aria-hidden="true">
+            LSK
+          </span>
+          <dl>
+            <div>
+              <dt>Name</dt>
+              <dd>{profile.name}</dd>
+            </div>
+            <div>
+              <dt>Studying</dt>
+              <dd>
+                {profile.degree}, {profile.university}
+              </dd>
+            </div>
+            <div>
+              <dt>Expected</dt>
+              <dd>{profile.graduation}</dd>
+            </div>
+            <div>
+              <dt>Interests</dt>
+              <dd>Software · AI · Cloud · Security</dd>
+            </div>
+          </dl>
         </div>
         <div className="prose" data-reveal-stagger>
           <Eyebrow>CURIOUS, IN MORE THAN ONE DIRECTION</Eyebrow>
@@ -47,9 +75,74 @@ export default function About() {
           ))}
         </div>
       </section>
+      <section className="section car-story" aria-labelledby="car-heading">
+        <SectionHead index="§ 02" label="THE REFERENCE CAR" id="car-heading">
+          Engineering in motion.
+        </SectionHead>
+        <div className="car-story-grid">
+          <CarFigure
+            photo={carPhotos.frontLow}
+            index="03"
+            sizes="(max-width: 700px) 100vw, 58vw"
+            className="car-story-main"
+          />
+          <div className="car-story-copy" data-reveal-stagger>
+            {carInterest.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+            <p>
+              Cars are one of my biggest interests. I founded and led an
+              automotive engineering and design club, and I share the interest
+              on my automotive YouTube channel.
+            </p>
+            <a
+              className="text-link"
+              href={profile.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              @2fast-m3 <Arrow />
+            </a>
+          </div>
+        </div>
+        <div className="car-details">
+          <CarFigure
+            photo={carPhotos.cockpit}
+            index="04"
+            sizes="(max-width: 700px) 100vw, 33vw"
+          />
+          <CarFigure
+            photo={carPhotos.cluster}
+            index="05"
+            sizes="(max-width: 700px) 100vw, 33vw"
+          />
+          <table className="design-map" data-reveal>
+            <caption>From the car to this site</caption>
+            <thead>
+              <tr>
+                <th scope="col">Reference</th>
+                <th scope="col">On the car</th>
+                <th scope="col">On this site</th>
+              </tr>
+            </thead>
+            <tbody>
+              {carInterest.mapping.map(([ref, onCar, onSite]) => (
+                <tr key={ref}>
+                  <th scope="row">{ref}</th>
+                  <td>{onCar}</td>
+                  <td>{onSite}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
       <section className="section music" aria-labelledby="music-heading">
         <div className="music-heading" data-reveal>
-          <Eyebrow>02 / ON REPEAT</Eyebrow>
+          <p className="section-marker">
+            <span className="section-index">§ 03</span>
+            <span>ON REPEAT</span>
+          </p>
           <h2 id="music-heading">
             A different kind
             <br />
@@ -101,7 +194,10 @@ export default function About() {
         aria-labelledby="production-heading"
       >
         <div data-reveal-stagger>
-          <Eyebrow>03 / MAKING BEATS</Eyebrow>
+          <p className="section-marker">
+            <span className="section-index">§ 04</span>
+            <span>MAKING BEATS</span>
+          </p>
           <h2 id="production-heading">
             Same instinct,
             <br />
@@ -123,31 +219,34 @@ export default function About() {
         className="section interests"
         aria-labelledby="interests-heading"
       >
-        <Eyebrow>04 / OFF THE SCREEN</Eyebrow>
-        <h2 id="interests-heading">More than a browser tab.</h2>
+        <SectionHead index="§ 05" label="OFF THE SCREEN" id="interests-heading">
+          More than a browser tab.
+        </SectionHead>
         <div className="interest-list" data-reveal-stagger>
-          {interests.map((interest, i) => (
-            <div key={interest.label}>
-              <span className="interest-index">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <p className="small-label">{interest.label}</p>
-                <h3>{interest.title}</h3>
-                <p>{interest.body}</p>
-                {interest.link && (
-                  <a
-                    className="text-link"
-                    href={interest.link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {interest.link.label} <Arrow />
-                  </a>
-                )}
+          {interests
+            .filter((interest) => interest.label !== "CARS")
+            .map((interest, i) => (
+              <div key={interest.label}>
+                <span className="interest-index">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <p className="small-label">{interest.label}</p>
+                  <h3>{interest.title}</h3>
+                  <p>{interest.body}</p>
+                  {interest.link && (
+                    <a
+                      className="text-link"
+                      href={interest.link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {interest.link.label} <Arrow />
+                    </a>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </section>
       <Connect />

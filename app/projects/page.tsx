@@ -10,13 +10,13 @@ export const metadata: Metadata = {
 export default function Projects() {
   return (
     <>
-      <PageIntro number="02" title="Work & explorations">
+      <PageIntro number="02" title="Work & explorations" label="PROJECTS">
         <p>
-          Practical ideas, thoughtfully explored.
-          <br />A growing collection of things I’m thinking about and building.
+          Practical ideas, thoughtfully explored. A growing collection of things
+          I’m thinking about and building.
         </p>
       </PageIntro>
-      <section className="section projects-section">
+      <section className="section projects-section" aria-label="Project list">
         <ProjectCollection />
         <p className="editorial-note">
           Implementation details come from my résumé. Each project page

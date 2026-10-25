@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Arrow, Eyebrow, PageIntro } from "@/components/ui";
+import { CarFigure } from "@/components/car";
 import { profile } from "@/lib/content";
+import { carPhotos } from "@/lib/cars";
 export const metadata: Metadata = {
   description:
     "Connect with Lingesh Sashi Kumar for internships, freelance websites, and collaboration.",
@@ -10,15 +12,14 @@ export const metadata: Metadata = {
 export default function Contact() {
   return (
     <>
-      <PageIntro number="05" title="Let’s connect">
+      <PageIntro number="05" title="Let’s connect" label="CONTACT">
         <p>
-          A good conversation can lead to something great.
-          <br />
-          I’d love to hear what you’re working on.
+          A good conversation can lead to something great. I’d love to hear what
+          you’re working on.
         </p>
       </PageIntro>
       <section className="section contact-grid">
-        <div>
+        <div data-reveal-stagger>
           <Eyebrow>OPEN TO POSSIBILITIES</Eyebrow>
           <h2>
             Have an idea?
@@ -34,14 +35,16 @@ export default function Contact() {
             Send me an email to start a conversation, connect on LinkedIn, or
             explore my public work on GitHub.
           </p>
-          <a
-            className="button primary"
-            href={profile.linkedin!}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Connect on LinkedIn <Arrow />
-          </a>
+          <div className="actions">
+            <a
+              className="button primary"
+              href={profile.linkedin!}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Connect on LinkedIn <Arrow />
+            </a>
+          </div>
         </div>
         <div className="contact-links" data-reveal-stagger>
           <a href={`mailto:${profile.email}`}>
@@ -82,6 +85,13 @@ export default function Contact() {
           </div>
         </div>
       </section>
+      <CarFigure
+        photo={carPhotos.rearThreeQuarter}
+        index="06"
+        sizes="(max-width: 700px) 100vw, 1150px"
+        className="contact-figure"
+        caption={`${carPhotos.rearThreeQuarter.label} — ${carPhotos.rearThreeQuarter.credit}`}
+      />
     </>
   );
 }

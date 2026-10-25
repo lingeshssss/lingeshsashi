@@ -64,7 +64,7 @@ export function Navigation() {
           className="wordmark"
           aria-label="Lingesh Sashi Kumar home"
         >
-          lsk<span>.</span>
+          LSK<span>.</span>
         </Link>
         <button
           className="menu-toggle"

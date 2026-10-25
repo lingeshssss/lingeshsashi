@@ -1,5 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import { projects, profile } from "@/lib/content";
+import { car, roofline } from "@/lib/cars";
+type Project = (typeof projects)[number];
 export function Arrow() {
   return (
     <svg
@@ -24,88 +27,156 @@ export function Eyebrow({ children }: { children: React.ReactNode }) {
     </p>
   );
 }
+// The roofline traced from the reference photo, drawn as a section rule.
+export function ContourRule({ intro = false }: { intro?: boolean }) {
+  return (
+    <svg
+      className={intro ? "contour-rule is-intro" : "contour-rule"}
+      data-reveal={intro ? undefined : "line"}
+      aria-hidden="true"
+      focusable="false"
+      viewBox={roofline.viewBox}
+      preserveAspectRatio="none"
+    >
+      <path d={roofline.path} pathLength={1} />
+    </svg>
+  );
+}
+export function SectionHead({
+  index,
+  label,
+  id,
+  children,
+}: {
+  index: string;
+  label: string;
+  id?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <header className="section-head" data-reveal-stagger>
+      <p className="section-marker">
+        <span className="section-index">{index}</span>
+        <span>{label}</span>
+      </p>
+      <h2 id={id}>{children}</h2>
+    </header>
+  );
+}
 export function PageIntro({
   number,
   title,
+  label,
   children,
 }: {
   number: string;
   title: string;
+  label?: string;
   children: React.ReactNode;
 }) {
   return (
     <section className="page-intro">
-      <Eyebrow>
-        {number} / {title}
-      </Eyebrow>
+      <div className="page-intro-meta">
+        <span className="page-index" aria-hidden="true">
+          {number}
+        </span>
+        <Eyebrow>{label ?? title}</Eyebrow>
+      </div>
       <h1>
-        {title}
-        <span className="accent">.</span>
+        <span className="mask-line">
+          <span>
+            {title}
+            <span className="accent">.</span>
+          </span>
+        </span>
       </h1>
       <div className="intro-copy">{children}</div>
+      <ContourRule intro />
     </section>
   );
 }
 export function ProjectVisual({
   project = projects[0],
+  sizes = "(max-width: 700px) 100vw, 50vw",
+  decorative = false,
 }: {
-  project?: (typeof projects)[number];
+  project?: Project;
+  sizes?: string;
+  decorative?: boolean;
 }) {
-  const market = project.slug === "marketpilot-ai";
+  if (project.screenshot)
+    return (
+      <div className="project-visual has-screenshot">
+        <Image
+          src={project.screenshot}
+          alt={decorative ? "" : (project.screenshotAlt ?? "")}
+          width={1440}
+          height={1000}
+          sizes={sizes}
+        />
+      </div>
+    );
   return (
     <div
-      className={market ? "project-visual market-visual" : "project-visual"}
-      role="img"
-      aria-label={`${project.title} editorial artwork, not an application screenshot`}
+      className="project-visual"
+      {...(decorative
+        ? { "aria-hidden": true }
+        : {
+            role: "img",
+            "aria-label": `${project.title} typographic artwork; no public screenshot is available`,
+          })}
     >
-      <span className="visual-index">
-        {market ? "AI EXPLORATION / 002" : "FULL-STACK APPLICATION / 001"}
+      <span className="visual-index">{project.category.toUpperCase()}</span>
+      <span className="visual-mark" aria-hidden="true">
+        {project.title}
       </span>
-      <div className="campus-mark">
-        {market ? (
-          <>
-            m<span>p</span>
-          </>
-        ) : (
-          <>
-            c<span>o</span>
-          </>
-        )}
-      </div>
-      <div className="visual-bottom">
-        <span>{project.title}</span>
-        <span>{market ? "DATA → INSIGHT" : "STUDENT LIFE, CONNECTED"}</span>
-      </div>
+      <span className="visual-bottom">{project.technologies.join(" · ")}</span>
     </div>
   );
 }
 export function ProjectCard({
   project = projects[0],
+  index = 0,
+  variant = "grid",
 }: {
-  project?: (typeof projects)[number];
+  project?: Project;
+  index?: number;
+  variant?: "grid" | "row";
 }) {
   return (
-    <Link href={"/projects/" + project.slug} className="project-card">
-      <ProjectVisual project={project} />
+    <Link
+      href={"/projects/" + project.slug}
+      className={`project-card is-${variant}`}
+    >
+      <span className="project-number" aria-hidden="true">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+      <ProjectVisual
+        project={project}
+        decorative
+        sizes={
+          variant === "row"
+            ? "(max-width: 700px) 100vw, 40vw"
+            : "(max-width: 700px) 100vw, 50vw"
+        }
+      />
       <div className="project-meta">
-        <div>
-          <p className="small-label">
-            {project.category} <span> / </span> {project.label}
-          </p>
-          <h3>{project.title}</h3>
-          <p>{project.description}</p>
-          <p className="project-stack">{project.technologies.join(" · ")}</p>
-        </div>
-        <span className="circle-arrow">
-          <Arrow />
-        </span>
+        <p className="small-label">
+          {project.category} <span> / </span> {project.label}
+        </p>
+        <h3 className="project-title">{project.title}</h3>
+        <p className="project-description">{project.description}</p>
+        <p className="project-stack">{project.technologies.join(" · ")}</p>
       </div>
+      <span className="circle-arrow">
+        <Arrow />
+      </span>
     </Link>
   );
 }
 export function Connect() {
   return (
-    <section className="connect" data-reveal>
+    <section className="connect" data-reveal-stagger>
       <div>
         <Eyebrow>GOOD THINGS START WITH A CONVERSATION</Eyebrow>
         <h2>
@@ -114,9 +185,11 @@ export function Connect() {
           <span className="muted">worth making.</span>
         </h2>
       </div>
-      <Link className="button primary" href="/contact">
-        Get in touch <Arrow />
-      </Link>
+      <div className="actions">
+        <Link className="button primary" href="/contact">
+          Get in touch <Arrow />
+        </Link>
+      </div>
     </section>
   );
 }
@@ -125,7 +198,7 @@ export function Footer() {
     <footer>
       <div className="footer-top">
         <Link href="/" className="wordmark">
-          lsk<span>.</span>
+          LSK<span>.</span>
         </Link>
         <p>Curiosity. Craft. Forward motion.</p>
         <div>
@@ -148,7 +221,10 @@ export function Footer() {
       </div>
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Lingesh Sashi Kumar</span>
-        <span>Built with intention.</span>
+        <span>
+          Design inspired by the {car.name}. Independent personal site; not
+          affiliated with BMW.
+        </span>
       </div>
     </footer>
   );
