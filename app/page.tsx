@@ -6,9 +6,8 @@ import {
   ProjectCard,
   SectionHead,
 } from "@/components/ui";
-import { CarFigure, HeroFigure } from "@/components/car";
+import { CarDrawing } from "@/components/car";
 import { experience, profile, projects } from "@/lib/content";
-import { carPhotos } from "@/lib/cars";
 export default function Home() {
   const work = experience.filter((e) => e.section === "work" && e.dates);
   return (
@@ -43,7 +42,12 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <HeroFigure />
+        <CarDrawing
+          view="threeQuarter"
+          index="01"
+          hero
+          className="hero-figure"
+        />
         <dl className="hero-specs">
           <div>
             <dt>Studying</dt>
@@ -130,12 +134,7 @@ export default function Home() {
         </div>
       </section>
       <section className="home-finale" aria-labelledby="finale-heading">
-        <CarFigure
-          photo={carPhotos.headOn}
-          index="02"
-          sizes="(max-width: 700px) 100vw, 55vw"
-          className="finale-figure"
-        />
+        <CarDrawing view="headOn" index="02" className="finale-figure" />
         <div className="finale-copy" data-reveal-stagger>
           <Eyebrow>GOOD THINGS START WITH A CONVERSATION</Eyebrow>
           <h2 id="finale-heading">

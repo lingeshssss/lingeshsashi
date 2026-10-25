@@ -417,38 +417,41 @@ test("home hero shows identity and actions in the first viewport", async ({
   await expect(page.locator(".hero-description")).toContainText(
     "Rutgers University–New Brunswick",
   );
-  // Once the reveal finishes, the shutter is gone and contour lines faded.
+  // Once the reveal finishes, every traced line rests fully drawn.
   await page.waitForTimeout(2600);
-  const frame = (await page.locator(".hero-frame").boundingBox())!;
-  const shutter = (await page.locator(".hero-shutter").boundingBox())!;
-  expect(shutter.x).toBeGreaterThanOrEqual(frame.x + frame.width - 1);
-  for (const opacity of await page
-    .locator(".hero-contour path")
-    .evaluateAll((paths) => paths.map((p) => getComputedStyle(p).opacity)))
-    expect(opacity).toBe("0");
+  for (const offset of await page
+    .locator(".car-drawing.is-hero path")
+    .evaluateAll((paths) =>
+      paths.map((p) => getComputedStyle(p).strokeDashoffset),
+    ))
+    expect(offset).toMatch(/^0(px)?$/);
 });
 
-test("car imagery has alt text, reserved space, and a credit", async ({
+test("car appears as original line drawings, not published photos", async ({
   page,
 }) => {
   for (const route of ["/", "/about", "/contact"]) {
     await page.goto(route);
-    const figures = page.locator(".hero-figure img, .car-figure img");
-    expect(await figures.count(), route).toBeGreaterThan(0);
-    for (const img of await figures.all()) {
-      await expect(img).toHaveAttribute("alt", /M8/);
-      await expect(img).toHaveAttribute("width", /\d+/);
-      await expect(img).toHaveAttribute("height", /\d+/);
+    const drawings = page.locator(".car-drawing svg");
+    expect(await drawings.count(), route).toBeGreaterThan(0);
+    for (const svg of await drawings.all()) {
+      await expect(svg).toHaveAttribute("role", "img");
+      await expect(svg).toHaveAttribute(
+        "aria-label",
+        /Line drawing of the BMW M8 Competition Gran Coupe/,
+      );
     }
-    // Decorative contour graphics stay out of the accessibility tree.
-    for (const svg of await page.locator(".contour-rule, .hero-contour").all())
+    // No car photographs are served; reference photos stay private.
+    for (const src of await page
+      .locator("main img")
+      .evaluateAll((imgs) => imgs.map((i) => i.getAttribute("src") || "")))
+      expect(src, route).not.toMatch(/m8-|cars%2F|\/cars\//);
+    for (const svg of await page.locator(".contour-rule").all())
       await expect(svg).toHaveAttribute("aria-hidden", "true");
   }
-  await expect(page.locator(".contact-figure figcaption")).toContainText(
-    "Exotic Car Trader",
-  );
   await expect(page.locator("footer")).toContainText("not affiliated with BMW");
-  // Card screenshots are decorative inside links; the link text names them.
+  await page.goto("/about");
+  await expect(page.locator(".design-map tbody tr")).toHaveCount(4);
   await page.goto("/projects");
   await expect(page.locator(".project-card img")).toHaveAttribute("alt", "");
 });
@@ -519,12 +522,15 @@ test("home reveal is skipped with reduced motion and without JavaScript", async 
           .first()
           .evaluate((el) => getComputedStyle(el).animationName),
       ).toBe("none");
-      const frame = (await page.locator(".hero-frame").boundingBox())!;
-      const shutter = (await page.locator(".hero-shutter").boundingBox())!;
-      expect(shutter.x).toBeGreaterThanOrEqual(frame.x + frame.width - 1);
+      expect(
+        await page
+          .locator(".car-drawing.is-hero path")
+          .first()
+          .evaluate((el) => getComputedStyle(el).animationName),
+      ).toBe("none");
     }
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.locator(".hero-figure img")).toBeVisible();
+    await expect(page.locator(".car-drawing.is-hero svg")).toBeVisible();
     await expect(
       page.getByRole("link", { name: "View Projects" }),
     ).toBeVisible();
